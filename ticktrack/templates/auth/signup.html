@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="register-photo" style="background: #ffffff">
+        <div class="form-container">
+            <form class="shadow" method="post">
+                <h2 class="text-center"><strong>Зарегистрироваться</strong></h2>
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.name(class="form-control", type="text", placeholder="Имя пользователя") }}
+                    {% for error in form.name.errors %}
+                        <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: 1rem">{{ error() }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.email(class="form-control", type="email", placeholder="Электронная почта") }}
+                    {% for error in form.email.errors %}
+                        <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: .75rem">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.password(class="form-control", type="password", placeholder="Пароль") }}
+                    {% for error in form.password.errors %}
+                        <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: .75rem">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.confirm(class="form-control", type="password", placeholder="Повторите пароль") }}
+                    {% for error in form.confirm.errors %}
+                        <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: .75rem">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
+                </div>
+                <a class="already" href="/login">У вас уже есть аккаунт? Войдите</a>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}

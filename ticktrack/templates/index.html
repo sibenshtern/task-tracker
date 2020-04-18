@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>TickTrack</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome-all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/line-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome5-overrides.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Features-Clean.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Footer-Dark.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Login-Form-Clean.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Registration-Form-with-Photo.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-light navbar-expand-md" style="background: #fffffe">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/" style="font-family: 'Roboto Mono', monospace;color: #ff8e3c;"><strong>TickTrack</strong></a>
+                <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <div
+                    class="collapse navbar-collapse d-md-flex d-lg-flex justify-content-md-end justify-content-lg-end justify-content-xl-end" id="navcol-1">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item" role="presentation"><a class="nav-link" href="/login" style="font-size: 16px;font-family: 'Roboto Mono', monospace;color: #000000;">Вход</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link active" href="/signup" style="font-size: 16px;font-family: 'Roboto Mono', monospace;color: #ff8e3c;">Регистрация</a></li>
+                    </ul>
+            </div>
+            </div>
+        </nav>
+    </header>
+    <div class="d-flex d-lg-flex flex-column justify-content-center align-items-center" style="height: 50vh;background: #fffffe; color: #0d0d0d">
+        <h1 class="text-center text-sm-center text-md-center text-lg-center text-xl-center">Успевайте сделать все с TickTrack</h1>
+        <p class="text-center text-sm-center text-md-center text-lg-center text-xl-center" style="color: #2a2a2a">Облегчайте свою работу, перенося все ваши задачи из головы в список дел&nbsp;<br></p>
+    </div>
+    <div class="features-clean" style="background: #fffffe; color: #0d0d0d">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Преимущества</h2>
+                <p class="text-center" style="color: #2a2a2a">Наши преимущества перед другими сервисами</p>
+            </div>
+            <div class="row features">
+                <div class="col-sm-6 col-lg-4 item"><i class="la la-mobile-phone icon" style="color: #ff8e3c"></i>
+                    <h3 class="name">Доступность</h3>
+                    <p class="description" style="color: #2a2a2a">Возможность работать как с компьютера, так и с телефона</p>
+                </div>
+                <div class="col-sm-6 col-lg-4 item"><i class="far fa-smile icon" style="color: #ff8e3c"></i>
+                    <h3 class="name">Полностью бесплатен</h3>
+                    <p class="description" style="color: #2a2a2a">Отсутствие внутренних покупок и премиум подписок<br></p>
+                </div>
+                <div class="col-sm-6 col-lg-4 item"><i class="fa fa-list-alt icon" style="color: #ff8e3c"></i>
+                    <h3 class="name"><strong>Синхронизация с другими сервисами</strong><br></h3>
+                    <p class="description" style="color: #2a2a2a">Возможность синхронизации с Google Calendar<br></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-dark">
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3 item">
+                        <h3>Сервисы</h3>
+                        <ul>
+                            <li><a href="/about/api" style="font-size: 16px;">API</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6 col-md-3 item">
+                        <h3 style="color: #0d0d0d">О нас</h3>
+                        <ul>
+                            <li><a href="/about/team" style="font-size: 16px;">Команда</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 item text">
+                        <h3><strong>TickTrack</strong></h3>
+                        <ul>
+                            <li class="d-md-flex justify-content-sm-center justify-content-md-start justify-content-lg-start" style="font-size: 16px;">Трекер задач и всего прочего</li>
+                            <li class="d-flex d-lg-flex justify-content-center justify-content-sm-center align-items-sm-center justify-content-md-start justify-content-lg-start align-items-lg-center" style="font-size: 16px;">Проект для&nbsp;<a class="d-flex justify-content-center align-items-center" href="https://yandexlyceum.ru" style="opacity: 1;" target="_blank"><img class="d-flex d-lg-flex justify-content-center align-items-center justify-content-lg-center align-items-lg-center" data-aos="zoom-in" data-aos-once="true" src="https://static.tildacdn.com/tild3238-3836-4135-a466-376363303065/1.svg" height="16" style="height: 17px;filter: brightness(100%);"></a></li>
+                        </ul>
+                    </div>
+                    <div class="col item social" style="color: #ff8e3c">
+                        <a data-aos="zoom-in" data-aos-once="true" href="https://vk.com/sibenshtern" target="_blank">
+                            <i class="fab fa-vk" style="color: #ff8e3c;"></i>
+                        </a>
+                        <a data-aos="zoom-in" data-aos-once="true" href="https://github.com/sibenshtern" target="_blank">
+                            <i class="fab fa-github"  style="color: #ff8e3c;"></i>
+                        </a>
+                    </div>
+                </div>
+                <p class="copyright">TickTrack © 2020</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.js"></script>
+</body>
+
+</html>
