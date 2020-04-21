@@ -49,33 +49,29 @@
                     </span>
                     <a href="next_week">&nbsp;Следующая неделя</a>
                 </li>
-                <li class="sidebar-dropdown" id="projects" style="max-height: 24px;">
-                    Проекты
-                    <a href="add_project" class="add-link" style="margin-bottom: 1px">
-                        <span></span>
-                        <span></span>
-                    </a>
-                </li>
-                <li class="projects-dropdown-menu">
-                    <ul>
-                        {% for mark in marks %}
-                            {{ mark }}
-                        {% endfor %}
-                    </ul>
-                </li>
+                <!-- <li class="sidebar-dropdown" id="projects">
+                    <div class="dropdown-controls">
+                        Проекты
+                        <a href="add_project" class="add-link" style="margin-bottom: 1px">
+                            <span></span>
+                            <span></span>
+                        </a>
+                    </div>
+                    <div class="menu-dropdown">
+                        fadsfsdfasdfsadfasd
+                    </div>
+                </li> -->
                 <li class="sidebar-dropdown" id="marks">
-                    Метки
-                    <a href="add_mark" class="add-link" style="margin-bottom: 1px">
-                        <span></span>
-                        <span></span>
-                    </a>
-                </li>
-                <li class="marks-dropdown-menu">
-                    <ul>
-                        {% for mark in marks %}
-                            {{ mark }}
-                        {% endfor %}
-                    </ul>
+                    <div class="dropdown-controls">
+                        Метки
+                        <a href="add_mark" class="add-link" style="margin-bottom: 1px">
+                            <span></span>
+                            <span></span>
+                        </a>
+                    </div>
+                    <div class="menu-dropdown">
+                        sdfsadfsadfsadfsaf
+                    </div>
                 </li>
             </ul>
         </nav>
@@ -95,13 +91,7 @@
         }
 
         function dropdown(event) {
-            if (event.target.id == "projects") {
-                activate_element('.projects-dropdown-menu');
-            }
-
-            if (event.target.id == 'marks') {
-                activate_element('.marks-dropdown-menu');
-            }
+            $(event.target).siblings('.menu-dropdown').toggleClass('active');
         }
 
         $(document).ready(function () {

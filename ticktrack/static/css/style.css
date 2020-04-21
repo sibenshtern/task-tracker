@@ -59,8 +59,10 @@ a:hover {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    border-radius: 5px;
 
     margin: 1rem 1.5rem 1rem 1.5rem;
+    padding: 0.1rem 0.1rem 0.1rem 0.1rem;
 
     /* Text */
     color: #000000;
@@ -70,16 +72,30 @@ a:hover {
 }
 
 .sidebar-dropdown {
-    align-items: center;
-    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 1.4rem 1rem 1.4rem;
 }
 
-.sidebar-component.active, .sidebar-component.active {
+.dropdown-controls {
+    display: flex;
+    flex-direction: row;
+    border-radius: 5px;
+    padding: 0.2rem 0.2rem 0.2rem 0.2rem;
+
+    justify-content: space-between;
+    width: 100%;
+
+    align-items: center;
+}
+
+.sidebar-component.active, .dropdown-controls.active {
     background: #fffffe;
     font-weight: 600;
+    transition: all 0.6s;
 }
 
-.sidebar-component:hover, .sidebar-dropdown:hover {
+.sidebar-component:hover, .dropdown-controls:hover {
     background: #fffffe;
 }
 
@@ -176,7 +192,7 @@ a:hover {
     transform: rotate(90deg) translateX(10px);
 }
 
-.projects-dropdown-menu, .marks-dropdown-menu {
+.menu-dropdown {
     display: none;
 
     flex-direction: column;
@@ -188,7 +204,7 @@ a:hover {
     transition: all 0.6s;
 }
 
-.projects-dropdown-menu.active, .marks-dropdown-menu.active {
+.menu-dropdown.active {
     display: flex;
     transition: all 0.6s;
 }
@@ -232,12 +248,3 @@ a:hover {
     }
 
 }
-
-
-
-
-
-
-
-
-

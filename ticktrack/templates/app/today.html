@@ -1,1 +1,9 @@
 {% extends "app/app.html" %}
+
+
+{% block page_content %}
+    {% for task in tasks %}
+        {{ task }}
+    {% endfor %}
+{% endblock %}
+
