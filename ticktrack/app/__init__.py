@@ -13,7 +13,8 @@ blueprint = Blueprint('app', __name__, template_folder='templates')
 @login_required
 def incoming_page():
     return render_template(
-        'app/incoming.html', day=datetime.now().day, title="Входящие"
+        'app/incoming.html', day=datetime.now().day, title="Входящие",
+        marks=db_utils.return_marks(current_user.id)
     )
 
 
@@ -23,7 +24,8 @@ def today_page():
     tasks = db_utils.return_today_tasks(current_user.id)
 
     return render_template(
-        'app/today.html', day=datetime.now().day, title="Сегодня", tasks=tasks
+        'app/today.html', day=datetime.now().day, title="Сегодня", tasks=tasks,
+        marks=db_utils.return_marks(current_user.id)
     )
 
 
@@ -31,6 +33,7 @@ def today_page():
 @login_required
 def next_week_page():
     return render_template(
-        'app/next_week.html', day=datetime.now().day, title="Следующая неделя"
+        'app/next_week.html', day=datetime.now().day, title="Следующая неделя",
+        marks=db_utils.return_marks(current_user.id)
     )
 

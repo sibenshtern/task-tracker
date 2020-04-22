@@ -91,7 +91,6 @@ a:hover {
 
 .sidebar-component.active, .dropdown-controls.active {
     background: #fffffe;
-    font-weight: 600;
     transition: all 0.6s;
 }
 
@@ -206,9 +205,34 @@ a:hover {
 
 .menu-dropdown.active {
     display: flex;
+    width: 90%;
     transition: all 0.6s;
 }
 
+
+.mark-element {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    justify-content: flex-start;
+    align-items: center;
+
+    margin: 0.5rem 0 0.5rem 0;
+
+    background: #ffffff;
+    border-radius: 5px;
+    color: inherit;
+}
+
+.mark-element div.color {
+    width: 15px;
+    height: 15px;
+
+    margin: 0 0.5rem 0 0.5rem;
+
+    border-radius: 50%;
+}
 
 /* sidebar button */
 

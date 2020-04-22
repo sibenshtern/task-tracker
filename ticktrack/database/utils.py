@@ -37,22 +37,27 @@ def return_user(user_id: int = None, email: str = None):
 
 
 def return_today_tasks(user_id: int):
-    try:
-        user = User.objects.get({'_id': user_id})
-        user_tasks = user.tasks
+    user = return_user(user_id)
 
+    if user is not None:
+        user_tasks = user.tasks
         today_tasks = []
         for task in user_tasks:
             now_date = datetime.date.today()
 
-            now_datetime = datetime.datetime(now_date.year, now_date.month, now_date.day)
-
-            print(task.finish_date)
-            print(now_datetime)
-            print(task.finish_date == now_datetime)
+            now_datetime = datetime.datetime(now_date.year, now_date.month,
+                                             now_date.day)
             if task.finish_date == now_datetime:
                 today_tasks.append(task.json())
 
         return today_tasks
-    except DoesNotExist:
-        return None
+    return None
+
+
+def return_marks(user_id: int):
+    user = return_user(user_id)
+
+    if user is not None:
+        user_marks = [mark.json() for mark in user.marks]
+        return user_marks
+    return None

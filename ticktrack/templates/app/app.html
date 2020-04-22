@@ -62,15 +62,18 @@
                     </div>
                 </li> -->
                 <li class="sidebar-dropdown" id="marks">
-                    <div class="dropdown-controls">
-                        Метки
+                    <div class="dropdown-controls">Метки
                         <a href="add_mark" class="add-link" style="margin-bottom: 1px">
                             <span></span>
                             <span></span>
                         </a>
                     </div>
                     <div class="menu-dropdown">
-                        sdfsadfsadfsadfsaf
+                        {% for mark in marks %}
+                            <div class="mark-element">
+                                <div style="background: #{{ mark.color }}" class="color"></div>{{ mark.title }}
+                            </div>
+                        {% endfor %}
                     </div>
                 </li>
             </ul>
@@ -92,6 +95,7 @@
 
         function dropdown(event) {
             $(event.target).siblings('.menu-dropdown').toggleClass('active');
+            $(event.target).toggleClass('active');
         }
 
         $(document).ready(function () {

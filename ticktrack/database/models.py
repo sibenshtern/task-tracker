@@ -12,6 +12,9 @@ class Mark(EmbeddedMongoModel):
     title = fields.CharField(min_length=1, required=True)
     color = fields.CharField(min_length=6)
 
+    def json(self):
+        return {'title': self.title, 'color': self.color}
+
     class Meta:
         final = True
 
