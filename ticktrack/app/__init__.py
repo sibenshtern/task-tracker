@@ -9,11 +9,11 @@ from ticktrack.database import utils as db_utils
 blueprint = Blueprint('app', __name__, template_folder='templates')
 
 
-@blueprint.route('/incoming')
+@blueprint.route('/all')
 @login_required
 def incoming_page():
     return render_template(
-        'app/incoming.html', day=datetime.now().day, title="Входящие",
+        'app/all.html', day=datetime.now().day, title="Все задачи",
         marks=db_utils.return_marks(current_user.id)
     )
 

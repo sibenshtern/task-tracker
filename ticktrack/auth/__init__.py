@@ -26,7 +26,7 @@ def login_page():
         user = database.return_user(email=form.email.data.strip())
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            return redirect('/app/incoming')
+            return redirect('/app/all')
         return 'Неправильно что-то'
 
     return render_template('auth/login.html', form=form)
