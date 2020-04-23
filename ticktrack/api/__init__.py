@@ -51,12 +51,15 @@ class OpenTaskResource(Resource):
             if args.action.startswith('change_status'):
                 task = db_utils.return_task(user.id, args.task_id)
                 task.change_status()
+                user.save()
+                return jsonify({'status': 'OK', 'message': 'change_status'})
             elif args.action.startswith('update'):
                 task = db_utils.return_task(user.id, args.task_id)
 
                 if args.title:
                     task.title = args.title
-            user.save()
+                user.save()
+                return jsonify({})
         else:
             abort(404, message="Task ID not found")
 
