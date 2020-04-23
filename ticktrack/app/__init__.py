@@ -6,8 +6,9 @@ from flask import render_template
 from flask_login import login_required, current_user
 from werkzeug.utils import redirect
 
+from ticktrack.database.models import Mark
 from ticktrack.database import utils as db_utils
-from ticktrack.app.forms import AddMarkForm
+from ticktrack.app.forms import AddMarkForm, AddTaskForm
 
 blueprint = Blueprint('app', __name__, template_folder='templates')
 
@@ -44,12 +45,46 @@ def today_page():
 def next_week_page():
     return render_template(
         'app/next_week.html', day=datetime.now().day, title="Следующая неделя",
-        marks=db_utils.return_marks(current_user.id)
+        marks=db_utils.return_marks(current_user.id), current_user=current_user
     )
 
 
-@blueprint.route('/add_mark')
+@blueprint.route('/add_mark', methods=['GET', 'POST'])
 @login_required
 def add_mark():
     form = AddMarkForm()
-    return render_template('app/add_mark.html', form=form)
+
+    if form.validate_on_submit():
+        if not form.validate():
+            return render_template(
+                'app/add_mark.html', form=form, title="Добавить метку",
+                current_user=current_user
+            )
+        db_utils.create_mark(form.title.data)
+        return redirect('/app')
+
+    return render_template(
+        'app/add_mark.html', form=form, title="Добавить метку",
+        current_user=current_user
+    )
+
+
+@blueprint.route('/add_task', methods=['GET', 'POST'])
+@login_required
+def add_task():
+    form = AddTaskForm()
+
+    if form.validate_on_submit():
+        if not form.validate():
+            return render_template(
+                'app/add_task.html', form=form, title="Добавить задачу",
+                current_user=current_user
+            )
+        db_utils.create_task(form.title.data)
+        return redirect('/app')
+
+    return render_template(
+        'app/add_task.html', form=form, title="Добавить задачу",
+        current_user=current_user
+    )
+

@@ -45,12 +45,20 @@ a:hover {
 }
 
 .title {
+    display: flex;
     font-family: 'Roboto', monospace;
     font-size: 24px;
     font-weight: 500;
+
+    justify-content: space-between;
 
     width: 80%;
 
     border-bottom: 1px solid;
     border-color: rgba(205, 205, 205, 0.5);
+}
+
+.title a {
+    width: 24px;
+    height: 24px;
 }

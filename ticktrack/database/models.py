@@ -1,4 +1,6 @@
 import datetime
+from string import ascii_letters
+from random import choice
 
 from pymodm import MongoModel, EmbeddedMongoModel, fields
 from pymongo.write_concern import WriteConcern
@@ -34,24 +36,30 @@ class Task(EmbeddedMongoModel):
     def set_finish_date(self, date):
         self.finish_date = date
 
-    def finish_task(self):
-        self.finished = True
-
 
 class User(MongoModel, UserMixin):
     id = fields.IntegerField(primary_key=True)
     email = fields.EmailField(required=True)
     hashed_password = fields.CharField(min_length=1)
+    apikey = fields.CharField()
     name = fields.CharField(required=True, min_length=1)
 
     tasks = fields.EmbeddedDocumentListField(Task)
     marks = fields.EmbeddedDocumentListField(Mark)
+
+    def generate_apikey(self):
+        symbols = list(ascii_letters) + list('1234567890')
+        self.apikey = ''.join(choice(symbols) for _ in range(30))
+        print(self.apikey)
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
+
+    def return_apikey(self):
+        return self.apikey
 
     class Meta:
         write_concern = WriteConcern(j=True)

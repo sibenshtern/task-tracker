@@ -2,8 +2,23 @@
 
 
 {% block content %}
-    {{ form.title }}
-    {{ form.submit }}
+    <div class="register-photo" style="background-color: #ffffff;">
+        <div class="form-container">
+                <form class="shadow" method="post" action="">
+                    <h2 class="text-center"><strong>Добавить метку</strong></h2>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                    {{ form.title(class="form-control", type="text", placeholder="Название метки") }}
+                        {% for error in form.title.errors %}
+                            <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: 1rem">{{ error() }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
+                    </div>
+                </form>
+            </div>
+    </div>
 {% endblock %}
 
 

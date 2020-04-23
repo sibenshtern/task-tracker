@@ -208,7 +208,7 @@
     flex-direction: row;
     width: 100%;
 
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 
     margin: 0.5rem 0 0.5rem 0;
@@ -218,11 +218,6 @@
     color: inherit;
 }
 
-.mark-element div.color {
-    width: 15px;
-    height: 15px;
-
-    margin: 0 0.5rem 0 0.5rem;
-
-    border-radius: 50%;
+.mark-element a {
+    width: 25px;
 }

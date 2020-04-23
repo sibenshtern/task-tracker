@@ -3,7 +3,6 @@
 {% block own_styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/task-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/sidebar-style.css') }}">
-{#    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style/') }}">#}
 {% endblock %}
 
 
@@ -77,7 +76,10 @@
                     </div>
                     <div class="menu-dropdown">
                         {% for mark in marks %}
-                            <div class="mark-element">{{ mark.title }}</div>
+                            <div class="mark-element">
+                                {{ mark.title }}
+                                <button type="submit" onclick="delete_mark('{{ mark.id }}')">&#10060;</button>
+                            </div>
                         {% endfor %}
                     </div>
                 </li>
@@ -110,8 +112,20 @@
 
         function finish_task(task_id)
         {
-            $.post('/api/tasks/done/' + task_id);
+            $.ajax({
+                url:  '/api?' + 'apikey=' + '{{ current_user.return_apikey() }}' + '&task_id=' + task_id,
+                type: 'PUT'
+            });
             $('#' + task_id).toggleClass('finished');
+        }
+
+        function delete_mark(mark_id)
+        {
+            $.ajax({
+                url:  '/api?' + 'apikey=' + '{{ current_user.return_apikey() }}' + '&mark_id=' + mark_id,
+                type: 'DELETE'
+            });
+            location.reload();
         }
 
         $(document).ready(function () {

@@ -2,17 +2,22 @@
 
 
 {% block page_content %}
-    <div class="title">Все задачи</div>
+    <div class="title">Все задачи
+        <a href="add_task">&#43;</a>
+    </div>
     <div class="tasks">
         {% for task in tasks %}
-            <div class="task" id="{{ task.id }}">
-                {% if task.finished %}
+            {% if task.finished %}
+                <div class="task finished" id="{{ task.id }}">
                     <input type="checkbox" onclick="finish_task('{{ task.id }}')" checked>
-                {% else %}
+                    {{ task.title }}
+                </div>
+            {% else %}
+                <div class="task">
                     <input type="checkbox" onclick="finish_task('{{ task.id }}')">
-                {% endif %}
-                <div class="task-body">{{ task.title }}</div>
-            </div>
+                    {{ task.title }}
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}
