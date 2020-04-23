@@ -13,26 +13,18 @@ class Mark(EmbeddedMongoModel):
     color = fields.CharField(min_length=6)
 
     def json(self):
-        return {'title': self.title, 'color': self.color}
+        return {'title': self.title}
 
     class Meta:
         final = True
 
 
-class TaskLine(EmbeddedMongoModel):
-    done = fields.BooleanField(default=False)
-    body = fields.CharField()
-
-    def finish(self):
-        self.done = True
-
-
 class Task(EmbeddedMongoModel):
     id = fields.IntegerField(primary_key=True)
     title = fields.CharField(default="Untitled")
+    finished = fields.BooleanField(default=False)
 
     marks = fields.EmbeddedDocumentListField(Mark)
-    lines = fields.EmbeddedDocumentListField(TaskLine)
     modified_date = fields.DateTimeField(default=datetime.datetime.now)
     finish_date = fields.DateTimeField()
 
@@ -42,8 +34,8 @@ class Task(EmbeddedMongoModel):
     def set_finish_date(self, date):
         self.finish_date = date
 
-    def json(self):
-        return {"id": self.id, "title": self.title}
+    def finish_task(self):
+        self.finished = True
 
 
 class User(MongoModel, UserMixin):

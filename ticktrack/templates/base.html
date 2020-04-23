@@ -14,12 +14,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fonts/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fonts/line-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome5-overrides.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Features-Clean.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Footer-Dark.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Login-Form-Clean.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Registration-Form-with-Photo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome5-overrides.min.css') }}"
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration-form.css') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename="css/style.css") }}">
+    {% block own_styles %}{% endblock %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.css">
 </head>
 

@@ -2,5 +2,17 @@
 
 
 {% block page_content %}
-    {{ user_info }}
+    <div class="title">Все задачи</div>
+    <div class="tasks">
+        {% for task in tasks %}
+            <div class="task" id="{{ task.id }}">
+                {% if task.finished %}
+                    <input type="checkbox" onclick="finish_task({{ task.id }})" checked>
+                {% else %}
+                    <input type="checkbox" onclick="finish_task()">
+                {% endif %}
+                <div class="task-body">{{ task.title }}</div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
+{% block own_styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/auth-styles.css") }}">
+{% endblock %}
+
 {% block content %}
     <div class="register-photo" style="background-color: #ffffff;">
+        {% if message is not none %}
+            <div class="error-message">{{ message }}</div>
+        {% endif %}
         <div class="form-container">
             <form class="shadow" method="post" action="">
                 <h2 class="text-center"><strong>Войти</strong></h2>

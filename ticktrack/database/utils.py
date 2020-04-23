@@ -48,9 +48,17 @@ def return_today_tasks(user_id: int):
             now_datetime = datetime.datetime(now_date.year, now_date.month,
                                              now_date.day)
             if task.finish_date == now_datetime:
-                today_tasks.append(task.json())
+                today_tasks.append(task)
 
         return today_tasks
+    return None
+
+
+def return_all_tasks(user_id):
+    user = return_user(user_id)
+
+    if user is not None:
+        return user.tasks
     return None
 
 

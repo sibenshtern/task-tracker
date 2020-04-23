@@ -13,7 +13,7 @@
     <div id="wrapper">
         <nav id="sidebar">
             <ul class="list-unstyled components">
-                <li class="sidebar-component" id="incoming">
+                <li class="sidebar-component" id="all">
                     <span class="item_icon">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fill-rule="evenodd">
@@ -70,32 +70,41 @@
                     </div>
                     <div class="menu-dropdown">
                         {% for mark in marks %}
-                            <div class="mark-element">
-                                <div style="background: #{{ mark.color }}" class="color"></div>{{ mark.title }}
-                            </div>
+                            <div class="mark-element">{{ mark.title }}</div>
                         {% endfor %}
                     </div>
                 </li>
             </ul>
         </nav>
-        {% block page_content %}{% endblock %}
+        <div class="page-content">
+            {% block page_content %}{% endblock %}
+        </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript">
-        function activate_element(element) {
+        function activate_element(element)
+        {
             $(element).toggleClass('active');
         }
         
-        function change_menu() {
+        function change_menu()
+        {
             activate_element('#sidebar');
             activate_element(this);
         }
 
-        function dropdown(event) {
+        function dropdown(event)
+        {
             $(event.target).siblings('.menu-dropdown').toggleClass('active');
             $(event.target).toggleClass('active');
+        }
+
+        function finish_task(task_id)
+        {
+            $.post('/api/tasks/done/' + task_id);
+            $('#' + task_id).toggleClass('finished');
         }
 
         $(document).ready(function () {
