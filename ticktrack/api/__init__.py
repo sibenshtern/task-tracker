@@ -3,98 +3,80 @@ from flask import jsonify
 from flask_restful import Resource
 from flask_restful import abort, reqparse
 
+from ticktrack.api import utils as api_utils
 from ticktrack.database import utils as db_utils
 from ticktrack.database.models import User, Task
 
 parser = reqparse.RequestParser()
+
 parser.add_argument('apikey', required=True)
 parser.add_argument('task_id', type=int)
 parser.add_argument('mark_id', type=int)
+parser.add_argument('title', type=str)
+parser.add_argument(
+    'action', choices=('change_status', 'update'), type=str,
+    help="Bas choice: {error_msg}. "
+         "Possible values: 'change_status' and 'update'")
 
 
-class TaskResource(Resource):
+class OpenTaskResource(Resource):
 
-    @staticmethod
-    def get():
+    def get(self):
         args = parser.parse_args()
 
-        apikey = args['apikey']
-        task_id = args['task_id']
+        self.check_apikey(args.apikey)
+        user = db_utils.return_user(apikey=args.apikey)
 
-        if db_utils.return_user(apikey=apikey) is None:
-            abort(404, message="Wrong apikey")
+        if args.task_id:
+            task_obj = {
+                'obj': 'task', 'user_id': user.id, 'task_id': args.task_id,
+                'message': f"Task with ID: {args.task_id} not found"
+            }
+            api_utils.abort_if_object_doesnt_exist(task_obj)
+
+            task = db_utils.return_task(user.id, args.task_id)
+            return task.json()
         else:
-            user = db_utils.return_user(apikey=apikey)
+            abort(404, message="Task ID not found")
 
-            abort_if_task_not_found(user.id, task_id)
-            task = db_utils.return_task(user.id, task_id)
-            return jsonify({
-                'status': 'success',
-                'response': {
-                    'id': task.id,
-                    'title': task.title,
-                    'finished': task.finished,
-                    'marks': task.marks,
-                    'finish_date': task.finish_date
-                }
-            })
-
-    @staticmethod
-    def post(task_id):
-        pass
-
-    @staticmethod
-    def put():
+    def put(self):
         args = parser.parse_args()
 
-        apikey = args['apikey']
-        task_id = args['task_id']
+        self.check_apikey(args.apikey)
+        user = db_utils.return_user(apikey=args.apikey)
 
-        if db_utils.return_user(apikey=apikey) is None:
-            abort(404, message="Wrong apikey")
-        else:
-            user = db_utils.return_user(apikey=apikey)
-            task = user.tasks[task_id - 1]
-            task.finished = not task.finished
+        if args.task_id:
+            self.check_task_id(user, args.task_id)
+
+            if args.action.startswith('change_status'):
+                task = db_utils.return_task(user.id, args.task_id)
+                task.change_status()
+            elif args.action.startswith('update'):
+                task = db_utils.return_task(user.id, args.task_id)
+
+                if args.title:
+                    task.title = args.title
             user.save()
-            return jsonify({'success': True})
+        else:
+            abort(404, message="Task ID not found")
 
     @staticmethod
-    def delete():
-        args = parser.parse_args()
-        apikey = args['apikey']
-        mark_id = args['mark_id']
+    def check_apikey(apikey):
+        user_obj = {
+            'obj': 'user', 'apikey': apikey, 'message': 'Invalid apikey'
+        }
+        return api_utils.abort_if_object_doesnt_exist(user_obj) is None
 
-        if db_utils.return_user(apikey=apikey) is None:
-            abort(404, message="Wrong apikey")
-        else:
-            user = db_utils.return_user(apikey=apikey)
-            for index in range(len(user.marks)):
-                if user.marks[index].id == mark_id:
-                    if len(user.marks) > 1:
-                        del user.marks[index]
-                    else:
-                        del user.marks
-            user.save()
-            return jsonify({'success': True})
+    @staticmethod
+    def check_task_id(user, task_id):
+        task_obj = {
+            'obj': 'task', 'user_id': user.id, 'task_id': task_id,
+            'message': f"Task with ID: {task_id} not found"
+        }
+        return api_utils.abort_if_object_doesnt_exist(task_obj) is None
 
 
-def abort_if_task_not_found(user_id, task_id):
-    task = db_utils.return_task(user_id, task_id)
-
-    if task is not None:
-        return None
-    abort(404)
 
 
-def abort_if_mark_not_found(apikey, mark_id):
-    pass
 
-
-def get_user_id_by_apikey(apikey):
-    user = db_utils.return_user(apikey=apikey)
-
-    if user is not None:
-        return user.id
-    return None
 

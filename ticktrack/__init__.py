@@ -10,18 +10,20 @@ from ticktrack.app import blueprint as app_blueprint
 from ticktrack.auth import blueprint as auth_blueprint
 from ticktrack.about import blueprint as about_blueprint
 from ticktrack.other import blueprint as other_blueprint
-from ticktrack.api import TaskResource
+from ticktrack.api import OpenTaskResource
+from ticktrack.api.appappi import ClosedTaskResource
 
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
 app.max_id = utils.search_max_id_in_users()
+app.apikey = '12345678900987654321'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 api = Api(app)
-api.add_resource(TaskResource, '/api')
+api.add_resource(OpenTaskResource, '/api')
 
 
 app.register_blueprint(app_blueprint, url_prefix="/app")

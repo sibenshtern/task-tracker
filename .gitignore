@@ -3,4 +3,5 @@ venv
 __pycache__
 
 *.log
-
+_version.py
+appappi.py

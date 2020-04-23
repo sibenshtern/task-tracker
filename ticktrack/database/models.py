@@ -36,6 +36,15 @@ class Task(EmbeddedMongoModel):
     def set_finish_date(self, date):
         self.finish_date = date
 
+    def change_status(self):
+        self.finished = not self.finished
+
+    def json(self):
+        return {
+            'id': self.id, 'title': self.title, 'finished': self.finished,
+            'marks': self.marks, 'finish_date': str(self.finish_date)
+        }
+
 
 class User(MongoModel, UserMixin):
     id = fields.IntegerField(primary_key=True)
