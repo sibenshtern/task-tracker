@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block own_styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/task-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/sidebar-style.css') }}">
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_style/') }}">#}
+{% endblock %}
+
+
 {% block app_button %}
     <button type="button" id="sidebarCollapse" class="navbar-btn">
         <span></span>
@@ -14,7 +21,7 @@
         <nav id="sidebar">
             <ul class="list-unstyled components">
                 <li class="sidebar-component" id="all">
-                    <span class="item_icon">
+                    <span class="item_icon" style="color: #00214d;">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fill-rule="evenodd">
                                 <path fill-rule="nonzero" d="M10 14.5a2 2 0 1 0 4 0h5.5V18a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 18v-3.5H10z" opacity=".1"></path>
@@ -25,7 +32,7 @@
                     <a href="all">Все задачи</a>
                 </li>
                 <li class="sidebar-component" id="today">
-                    <span class="item_icon">
+                    <span class="item_icon" style="color: #ff5470;">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fill-rule="evenodd">
                                 <path fill-rule="nonzero" d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v2.5h-15V6A1.5 1.5 0 0 1 6 4.5z" opacity=".1"></path>
@@ -39,7 +46,7 @@
                     <a href="today">&nbsp;Сегодня</a>
                 </li>
                 <li class="sidebar-component" id="next_week">
-                    <span class="item_icon">
+                    <span class="item_icon" style="color: #1a75fa;">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fill-rule="evenodd">
                                 <path fill-rule="nonzero" d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v2.5h-15V6A1.5 1.5 0 0 1 6 4.5z" opacity=".1"></path>
