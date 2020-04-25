@@ -71,5 +71,6 @@ class User(MongoModel, UserMixin):
         return self.apikey
 
     class Meta:
+        cascade = True
         write_concern = WriteConcern(j=True)
         connection_alias = "mongodb_app"

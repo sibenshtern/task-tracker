@@ -76,10 +76,7 @@
                     </div>
                     <div class="menu-dropdown">
                         {% for mark in marks %}
-                            <div class="mark-element">
-                                {{ mark.title }}
-                                <button type="submit" onclick="delete_mark('{{ mark.id }}')">&#10060;</button>
-                            </div>
+                            <div class="mark-element" id="{{ mark.id }}">{{ mark.title }}</div>
                         {% endfor %}
                     </div>
                 </li>
@@ -110,10 +107,14 @@
             $(event.target).toggleClass('active');
         }
 
+        function edit_mark(event) {
+            window.location.pathname = `/app/editmark/${event.target.id}`
+        }
+
         function finish_task(task_id)
         {
             $.ajax({
-                url: `/api?apikey=${'{{ current_user.return_apikey() }}'}&task_id=${task_id}&action=change_status`,
+                url: `/api?apikey={{ current_user.return_apikey() }}&task_id=${task_id}&action=change_status`,
                 type: 'PUT'
             });
             $('#' + task_id).toggleClass('finished');
@@ -131,6 +132,7 @@
         $(document).ready(function () {
             $('#sidebarCollapse').on('click', change_menu);
             $('.sidebar-dropdown').on('click', dropdown);
+            $('.mark-element').on('click', edit_mark)
         });
 
         let path = window.location.toString().split('/').pop();

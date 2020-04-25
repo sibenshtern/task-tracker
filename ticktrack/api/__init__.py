@@ -10,8 +10,7 @@ from ticktrack.database.models import User, Task
 parser = reqparse.RequestParser()
 
 parser.add_argument('apikey', required=True)
-parser.add_argument('task_id', type=int)
-parser.add_argument('mark_id', type=int)
+parser.add_argument('task_id', type=int, required=True)
 parser.add_argument('title', type=str)
 parser.add_argument(
     'action', choices=('change_status', 'update'), type=str,
@@ -19,7 +18,7 @@ parser.add_argument(
          "Possible values: 'change_status' and 'update'")
 
 
-class OpenTaskResource(Resource):
+class TaskResource(Resource):
 
     def get(self):
         args = parser.parse_args()
@@ -27,17 +26,10 @@ class OpenTaskResource(Resource):
         self.check_apikey(args.apikey)
         user = db_utils.return_user(apikey=args.apikey)
 
-        if args.task_id:
-            task_obj = {
-                'obj': 'task', 'user_id': user.id, 'task_id': args.task_id,
-                'message': f"Task with ID: {args.task_id} not found"
-            }
-            api_utils.abort_if_object_doesnt_exist(task_obj)
+        self.check_task_id(user, args.task_id)
 
-            task = db_utils.return_task(user.id, args.task_id)
-            return task.json()
-        else:
-            abort(404, message="Task ID not found")
+        task = db_utils.return_task(user.id, args.task_id)
+        return task.json()
 
     def put(self):
         args = parser.parse_args()
@@ -45,23 +37,21 @@ class OpenTaskResource(Resource):
         self.check_apikey(args.apikey)
         user = db_utils.return_user(apikey=args.apikey)
 
-        if args.task_id:
-            self.check_task_id(user, args.task_id)
+        self.check_task_id(user, args.task_id)
 
-            if args.action.startswith('change_status'):
-                task = db_utils.return_task(user.id, args.task_id)
-                task.change_status()
-                user.save()
-                return jsonify({'status': 'OK', 'message': 'change_status'})
-            elif args.action.startswith('update'):
-                task = db_utils.return_task(user.id, args.task_id)
+        if args.action.startswith('change_status'):
+            for task in user.tasks:
+                if task.id == args.task_id:
+                    task.finished = not task.finished
+            user.save()
+            return jsonify({'status': 'OK', 'message': 'status changed'})
+        elif args.action.startswith('update'):
+            task = db_utils.return_task(user.id, args.task_id)
 
-                if args.title:
-                    task.title = args.title
-                user.save()
-                return jsonify({})
-        else:
-            abort(404, message="Task ID not found")
+            if args.title:
+                task.title = args.title
+            user.save()
+            return jsonify({'status': 'OK', 'message': 'task updated'})
 
     @staticmethod
     def check_apikey(apikey):
@@ -77,9 +67,3 @@ class OpenTaskResource(Resource):
             'message': f"Task with ID: {task_id} not found"
         }
         return api_utils.abort_if_object_doesnt_exist(task_obj) is None
-
-
-
-
-
-

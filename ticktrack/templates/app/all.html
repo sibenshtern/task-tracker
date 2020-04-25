@@ -9,12 +9,12 @@
         {% for task in tasks %}
             {% if task.finished %}
                 <div class="task finished" id="{{ task.id }}">
-                    <input type="checkbox" onclick="finish_task('{{ task.id }}')" checked>
+                    <input type="checkbox" onclick="finish_task('{{ task.id }}')" style="width: 18px; height: 18px" checked>
                     {{ task.title }}
                 </div>
             {% else %}
-                <div class="task">
-                    <input type="checkbox" onclick="finish_task('{{ task.id }}')">
+                <div class="task" id="{{ task.id }}">
+                    <input type="checkbox" onclick="finish_task('{{ task.id }}')" style="width: 18px; height: 18px">
                     {{ task.title }}
                 </div>
             {% endif %}

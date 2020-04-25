@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% block own_styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/auth-styles.css') }}">
+{% endblock %}
 
 {% block content %}
     <div class="register-photo" style="background-color: #ffffff;">
@@ -10,7 +13,23 @@
                     <div class="form-group">
                     {{ form.title(class="form-control", type="text", placeholder="Название задачи") }}
                         {% for error in form.title.errors %}
-                            <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: 1rem">{{ error() }}</div>
+                            <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <div class="input-title">Метки</div>
+                        {{ form.marks(class="form-control", id="marks") }}
+                        {% for error in form.marks.errors %}
+                            <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <div class="input-title">Дата выполнения</div>
+                        {{ form.finish_date(class="form-control", placeholder="Дата выполнения") }}
+                        {% for error in form.finish_date.errors %}
+                            <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem">{{ error }}</div>
                         {% endfor %}
                     </div>
                     <div class="form-group">

@@ -13,3 +13,31 @@
     font-size: 16px;
     font-family: 'Roboto', monospace;
 }
+
+#marks {
+    height: calc(23.21px * 3 + 12px);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+}
+
+.input-title {
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 500;
+}
+

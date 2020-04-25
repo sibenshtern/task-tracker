@@ -27,15 +27,15 @@ def login_page():
 
     if form.validate_on_submit():
         user = db_utils.return_user(email=form.email.data.strip())
-        print(user.check_password(form.password.data))
-        if user is not None and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            return redirect('/app/all')
-        else:
-            return render_template(
-                'auth/login.html', form=form,
-                message="Неправильный логин или пароль. Повторите попытку"
-            )
+        if user is not None:
+            if user.check_password(form.password.data):
+                login_user(user, remember=form.remember_me.data)
+                return redirect('/app/all')
+
+        return render_template(
+            'auth/login.html', form=form,
+            message="Неправильный логин или пароль. Повторите попытку"
+        )
 
     return render_template('auth/login.html', form=form, message=None)
 

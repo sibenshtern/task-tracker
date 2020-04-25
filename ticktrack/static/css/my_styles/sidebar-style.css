@@ -212,6 +212,7 @@
     align-items: center;
 
     margin: 0.5rem 0 0.5rem 0;
+    padding: 2px 2px 2px 2px;
 
     background: #ffffff;
     border-radius: 5px;
@@ -219,5 +220,22 @@
 }
 
 .mark-element a {
+
     width: 25px;
 }
+
+.mark-element button {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: inherit;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
+}
+
+.mark-element button svg {
+    width: 18px;
+    height: 18px;
+    margin-bottom: 9px;
+}
+

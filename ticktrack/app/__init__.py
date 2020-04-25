@@ -73,6 +73,7 @@ def add_mark():
 @login_required
 def add_task():
     form = AddTaskForm()
+    form.marks.choices = [(str(mark.id), mark.title) for mark in current_user.marks]
 
     if form.validate_on_submit():
         if not form.validate():
@@ -80,7 +81,14 @@ def add_task():
                 'app/add_task.html', form=form, title="Добавить задачу",
                 current_user=current_user
             )
-        db_utils.create_task(form.title.data)
+        marks = [db_utils.return_mark(current_user.id, int(task_id))
+                 for task_id in form.marks.data]
+        finish_date = datetime(
+            form.finish_date.data.year, form.finish_date.data.month,
+            form.finish_date.data.day
+        )
+
+        db_utils.create_task(form.title.data, marks, finish_date)
         return redirect('/app')
 
     return render_template(

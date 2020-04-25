@@ -52,9 +52,15 @@ def create_mark(title):
     current_user.save()
 
 
-def create_task(title):
-    mark = Task(id=search_max_id_in_tasks() + 1, title=title)
-    current_user.tasks.append(mark)
+def create_task(title, marks, finish_date):
+    task = Task(id=search_max_id_in_tasks() + 1, title=title)
+
+    if len(marks) > 0:
+        task.marks = marks
+
+    task.set_finish_date(finish_date)
+
+    current_user.tasks.append(task)
     current_user.save()
 
 
@@ -72,14 +78,16 @@ def return_user(user_id: int = None, email: str = None, apikey: str = None):
         return None
 
 
-def return_mark(mark_id: int = None, title: str = None):
+def return_mark(user_id, mark_id: int = None, title: str = None):
     if mark_id is not None:
         if mark_id < len(current_user.marks):
-            return current_user.marks[mark_id]
+            return return_user(user_id).marks[mark_id]
         else:
-            return None
+            for mark in return_user(user_id).marks:
+                if mark.id == mark_id:
+                    return mark
     elif title is not None:
-        for mark in current_user.marks:
+        for mark in return_user(user_id).marks:
             if mark.title == title:
                 return mark
         else:
@@ -117,9 +125,9 @@ def return_task(user_id, task_id):
     user = return_user(user_id)
 
     if user is not None:
-        task = user.tasks[task_id - 1]
-        return task
-
+        for task in user.tasks:
+            if task.id == task_id:
+                return task
     return None
 
 
