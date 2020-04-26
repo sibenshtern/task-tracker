@@ -1,16 +1,13 @@
 {% extends "app/app.html" %}
 
-
 {% block page_content %}
-    <div class="title">Все задачи
-        <a href="add_task">&#43;</a>
-    </div>
+    <div class="title">Все задачи c меткой &laquo;{{ title }}&raquo;</div>
     <div class="tasks">
         {% for task in tasks %}
             {% if task.finished %}
-                <div class="task finished" id="task{{ task.id }}">
+                <div class="task" id="task{{ task.id }}">
                     <div class="con">
-                        <input type="checkbox" onclick="finish_task('{{ task.id }}')" checked>
+                        <input type="checkbox" onclick="finish_task('{{ task.id }}')">
                         <div class="text">{{ task.title }}</div>
                     </div>
                     <a href="edit_task/{{ task.id }}"><span class="material-icons">edit</span></a>
@@ -27,3 +24,4 @@
         {% endfor %}
     </div>
 {% endblock %}
+

@@ -1,14 +1,12 @@
-import sys
 from datetime import datetime
 
 from flask import Blueprint
-from flask import render_template
+from flask import render_template, abort
 
 from flask_login import login_required, current_user
 from werkzeug.utils import redirect
 
-from ticktrack.database.models import Mark
-from ticktrack.database import users_utils, tasks_utils, marks_utils
+from ticktrack.database import tasks_utils, marks_utils
 from ticktrack.app.forms import AddMarkForm, AddTaskForm, EditMarkForm, \
     EditTaskForm
 
@@ -19,6 +17,12 @@ blueprint = Blueprint('app', __name__, template_folder='templates')
 @login_required
 def index_page():
     return redirect('all')
+
+
+@blueprint.route('/apikey')
+@login_required
+def apikey_page():
+    return render_template('app/apikey.html', apikey=current_user.return_apikey())
 
 
 @blueprint.route('/all')
@@ -111,6 +115,9 @@ def add_task_page():
 @blueprint.route('edit_mark/<int:mark_id>', methods=['GET', 'POST'])
 @login_required
 def edit_mark_page(mark_id):
+    if marks_utils.return_mark(current_user.id, mark_id) is None:
+        abort(404)
+
     form = EditMarkForm()
     mark = marks_utils.return_mark(current_user.id, mark_id)
 
@@ -149,6 +156,9 @@ def edit_mark_page(mark_id):
 @blueprint.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
 @login_required
 def edit_task_page(task_id):
+    if tasks_utils.return_task(current_user.id, task_id) is None:
+        abort(404)
+
     form = EditTaskForm()
     form.marks.choices = [
         (str(mark.id), mark.title) for mark in current_user.marks
@@ -198,4 +208,20 @@ def edit_task_page(task_id):
     form.finish_date.process_data(task.finish_date)
 
     return render_template('app/edit_task.html', form=form)
+
+
+@blueprint.route('/show_tasks/<int:mark_id>')
+@login_required
+def show_tasks_page(mark_id):
+    tasks = [
+        task for task in current_user.tasks
+        if any([mark for mark in task.marks if mark.id == mark_id])
+    ]
+
+    return render_template(
+        'app/tasks.html', tasks=tasks,
+        title=marks_utils.return_mark(current_user.id, mark_id).title,
+        marks=marks_utils.return_marks(current_user.id),
+    )
+
 

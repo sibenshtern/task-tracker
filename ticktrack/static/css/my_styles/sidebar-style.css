@@ -132,7 +132,6 @@
     #sidebarCollapse.active span:last-of-type {
         transform: rotate(-45deg) translate(1px, -1px);
     }
-
 }
 
 /* button in navbar */
@@ -205,10 +204,10 @@
 
 .mark-element {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
 
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     align-items: center;
 
     margin: 0.5rem 0 0.5rem 0;
@@ -220,13 +219,12 @@
 }
 
 .mark-element a {
-
     width: 25px;
 }
 
 .mark-element button {
-    width: 24px;
-    height: 24px;
+    width: 100%;
+    height: 100%;
     padding: 0;
     background: inherit;
     border: 1px solid rgba(0, 0, 0, 0.35);

@@ -17,7 +17,7 @@
 
 {% block content %}
     <div id="wrapper">
-        <nav id="sidebar">
+        <nav id="sidebar" class="mCustomScrollbar _mCS_1 mCS-autoHide">
             <ul class="list-unstyled components">
                 <li class="sidebar-component" id="all">
                     <span class="item_icon" style="color: #00214d;">
@@ -28,7 +28,7 @@
                             </g>
                         </svg>
                     </span>
-                    <a href="all">Все задачи</a>
+                    <a href="/app/all">Все задачи</a>
                 </li>
                 <li class="sidebar-component" id="today">
                     <span class="item_icon" style="color: #ff5470;">
@@ -42,41 +42,44 @@
                             </g>
                         </svg>
                     </span>
-                    <a href="today">&nbsp;Сегодня</a>
+                    <a href="/app/today">&nbsp;Сегодня</a>
                 </li>
-                <li class="sidebar-component" id="next_week">
-                    <span class="item_icon" style="color: #1a75fa;">
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <g fill="currentColor" fill-rule="evenodd">
-                                <path fill-rule="nonzero" d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v2.5h-15V6A1.5 1.5 0 0 1 6 4.5z" opacity=".1"></path>
-                                <path fill-rule="nonzero" d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6zm10 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm8-4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM7 8h10a.5.5 0 1 1 0 1H7a.5.5 0 0 1 0-1z"></path>
-                            </g>
-                        </svg>
-                    </span>
-                    <a href="next_week">&nbsp;Следующая неделя</a>
-                </li>
-                <!-- <li class="sidebar-dropdown" id="projects">
-                    <div class="dropdown-controls">
-                        Проекты
-                        <a href="add_project" class="add-link" style="margin-bottom: 1px">
-                            <span></span>
-                            <span></span>
-                        </a>
-                    </div>
-                    <div class="menu-dropdown">
-                        fadsfsdfasdfsadfasd
-                    </div>
-                </li> -->
+{#                <li class="sidebar-component" id="next_week">#}
+{#                    <span class="item_icon" style="color: #1a75fa;">#}
+{#                        <svg width="24" height="24" viewBox="0 0 24 24">#}
+{#                            <g fill="currentColor" fill-rule="evenodd">#}
+{#                                <path fill-rule="nonzero" d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v2.5h-15V6A1.5 1.5 0 0 1 6 4.5z" opacity=".1"></path>#}
+{#                                <path fill-rule="nonzero" d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6zm10 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm8-4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM7 8h10a.5.5 0 1 1 0 1H7a.5.5 0 0 1 0-1z"></path>#}
+{#                            </g>#}
+{#                        </svg>#}
+{#                    </span>#}
+{#                    <a href="/app/next_week">&nbsp;Следующая неделя</a>#}
+{#                </li>#}
+{#                <li class="sidebar-dropdown" id="projects">#}
+{#                    <div class="dropdown-controls">#}
+{#                        Проекты#}
+{#                        <a href="add_project" class="add-link" style="margin-bottom: 1px">#}
+{#                            <span></span>#}
+{#                            <span></span>#}
+{#                        </a>#}
+{#                    </div>#}
+{#                    <div class="menu-dropdown">#}
+{#                        fadsfsdfasdfsadfasd#}
+{#                    </div>#}
+{#                </li>#}
                 <li class="sidebar-dropdown" id="marks">
                     <div class="dropdown-controls">Метки
-                        <a href="add_mark" class="add-link" style="margin-bottom: 1px">
+                        <a href="/app/add_mark" class="add-link" style="margin-bottom: 1px">
                             <span></span>
                             <span></span>
                         </a>
                     </div>
                     <div class="menu-dropdown">
                         {% for mark in marks %}
-                            <div class="mark-element" id="{{ mark.id }}">{{ mark.title }}</div>
+                            <div class="mark-element" id="{{ mark.id }}">
+                                <div class="mark-title">{{ mark.title }}</div>
+                                <button type="submit" onclick="show_tasks('{{ mark.id }}')">Показать задачи</button>
+                            </div>
                         {% endfor %}
                     </div>
                 </li>
@@ -107,17 +110,23 @@
             $(event.target).toggleClass('active');
         }
 
-        function edit_mark(event) {
-            window.location.pathname = `/app/edit_mark/${event.target.id}`
+        function edit_mark(event)
+        {
+            window.location.pathname = `/app/edit_mark/${event.target.id}`;
         }
 
         function finish_task(task_id)
         {
             $.ajax({
-                url: `/api?apikey={{ current_user.return_apikey() }}&task_id=${task_id}&action=change_status`,
+                url: `/api/task?apikey={{ current_user.return_apikey() }}&task_id=${task_id}&action=change_status`,
                 type: 'PUT'
             });
-            $('#' + task_id).toggleClass('finished');
+            $('#task' + task_id).toggleClass('finished');
+        }
+
+        function show_tasks(mark_id)
+        {
+            window.location.pathname = `/app/show_tasks/${mark_id}`;
         }
 
         function delete_mark(mark_id)
@@ -129,10 +138,11 @@
             location.reload();
         }
 
-        $(document).ready(function () {
+        $(document).ready(function ()
+        {
             $('#sidebarCollapse').on('click', change_menu);
             $('.sidebar-dropdown').on('click', dropdown);
-            $('.mark-element').on('click', edit_mark)
+            $('.mark-title').on('click', edit_mark)
         });
 
         let path = window.location.toString().split('/').pop();

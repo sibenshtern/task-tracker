@@ -22,15 +22,32 @@
     width: 80%;
 }
 
-.task.finished div {
+.task .con {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.task .text {
+    display: flex;
+    align-items: center;
+
+    height: 18px;
+    font-size: 18px;
+}
+
+.task.finished .text {
     text-decoration: line-through;
     color: rgba(0, 0, 0, 0.4);
 }
 
 .task input {
+    width: 18px;
+    height: 18px;
     margin: 0 0.8rem 0 0;
 }
 
 .task a {
-    width: fit-content;
+    width: 18px;
+    height: 18px;
 }
