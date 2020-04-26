@@ -22,7 +22,10 @@ def index_page():
 @blueprint.route('/apikey')
 @login_required
 def apikey_page():
-    return render_template('app/apikey.html', apikey=current_user.return_apikey())
+    return render_template(
+        'app/apikey.html', apikey=current_user.return_apikey(),
+        current_user=current_user
+    )
 
 
 @blueprint.route('/all')
@@ -31,7 +34,8 @@ def incoming_page():
     return render_template(
         'app/all.html', day=datetime.now().day, title="Все задачи",
         marks=marks_utils.return_marks(current_user.id),
-        tasks=tasks_utils.return_all_tasks(current_user.id)
+        tasks=tasks_utils.return_all_tasks(current_user.id),
+        current_user=current_user
     )
 
 
@@ -42,7 +46,8 @@ def today_page():
 
     return render_template(
         'app/today.html', day=datetime.now().day, title="Сегодня", tasks=tasks,
-        marks=marks_utils.return_marks(current_user.id)
+        marks=marks_utils.return_marks(current_user.id),
+        current_user=current_user
     )
 
 
@@ -123,7 +128,9 @@ def edit_mark_page(mark_id):
 
     if form.validate_on_submit():
         if not form.validate():
-            return render_template('app/edit_mark.html', form=form)
+            return render_template(
+                'app/edit_mark.html', form=form, current_user=current_user
+            )
 
         if form.edit_button.data:
             for mark in current_user.marks:
@@ -150,7 +157,9 @@ def edit_mark_page(mark_id):
         return redirect('/app/all')
 
     form.title.process_data(mark.title)
-    return render_template('app/edit_mark.html', form=form)
+    return render_template(
+        'app/edit_mark.html', form=form, current_user=current_user
+    )
 
 
 @blueprint.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
@@ -166,7 +175,9 @@ def edit_task_page(task_id):
 
     if form.validate_on_submit():
         if not form.validate():
-            return render_template('app/edit_task.html', form=form)
+            return render_template(
+                'app/edit_task.html', form=form, current_user=current_user
+            )
 
         # проверяем, что кнопка "изменить метку" нажата
         if form.edit_submit.data:
@@ -207,7 +218,9 @@ def edit_task_page(task_id):
     form.title.process_data(task.title)
     form.finish_date.process_data(task.finish_date)
 
-    return render_template('app/edit_task.html', form=form)
+    return render_template(
+        'app/edit_task.html', form=form, current_user=current_user
+    )
 
 
 @blueprint.route('/show_tasks/<int:mark_id>')
@@ -222,6 +235,5 @@ def show_tasks_page(mark_id):
         'app/tasks.html', tasks=tasks,
         title=marks_utils.return_mark(current_user.id, mark_id).title,
         marks=marks_utils.return_marks(current_user.id),
+        current_user=current_user, day=datetime.now().day
     )
-
-

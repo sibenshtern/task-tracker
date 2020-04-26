@@ -34,10 +34,13 @@ def login_page():
 
         return render_template(
             'auth/login.html', form=form,
-            message="Неправильный логин или пароль. Повторите попытку"
+            message="Неправильный логин или пароль. Повторите попытку",
+            current_user=current_user
         )
 
-    return render_template('auth/login.html', form=form, message=None)
+    return render_template(
+        'auth/login.html', form=form, message=None, current_user=current_user
+    )
 
 
 @blueprint.route('/signup', methods=['GET', 'POST'])
@@ -56,7 +59,8 @@ def signup_page():
             return render_template(
                 'auth/signup.html', form=form, title='Регистрация',
                 message="Пользователь с такой почтой уже зарегистрирован. "
-                        "Повторите попытку"
+                        "Повторите попытку",
+                current_user=current_user
             )
 
         users_utils.create_user(
@@ -65,4 +69,6 @@ def signup_page():
 
         return redirect('/login')
 
-    return render_template('auth/signup.html', form=form, message=None)
+    return render_template(
+        'auth/signup.html', form=form, message=None, current_user=current_user
+    )

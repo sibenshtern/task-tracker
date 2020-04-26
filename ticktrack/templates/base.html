@@ -31,14 +31,16 @@
                     {% block app_button %}{% endblock %}  <!-- К сожалению, не знаю как сделать лучше -->
                     <a class="navbar-brand" href="/" style="font-family: 'Roboto Mono', monospace;color: #ffffff; width: fit-content"><strong>TickTrack</strong></a>
                 </div>
-                <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button" style="width: fit-content; color: #fffffe; font-size: 18px">Меню</button>
-                    <div role="menu" class="dropdown-menu dropdown-menu-right">
-                        <a role="presentation" class="dropdown-item" href="apikey">Ваш API ключ</a>
-                        <div role="presentation" class="dropdown-divider"></div>
-                        <a role="presentation" class="dropdown-item" href="/logout">Выйти из аккаунта</a>
+                {% if current_user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button" style="width: fit-content; color: #fffffe; font-size: 18px">Меню</button>
+                        <div role="menu" class="dropdown-menu dropdown-menu-right">
+                            <a role="presentation" class="dropdown-item" href="apikey">Ваш API ключ</a>
+                            <div role="presentation" class="dropdown-divider"></div>
+                            <a role="presentation" class="dropdown-item" href="/logout">Выйти из аккаунта</a>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
         </nav>
     </header>
