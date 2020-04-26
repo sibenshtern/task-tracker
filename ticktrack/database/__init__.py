@@ -1,5 +1,4 @@
 from pymodm import connect
-from pymodm.errors import DoesNotExist
 
 from ticktrack.database.models import User
 

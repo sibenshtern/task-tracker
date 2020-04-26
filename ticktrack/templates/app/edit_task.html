@@ -1,14 +1,11 @@
 {% extends "base.html" %}
 
-{% block own_styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/auth-styles.css') }}">
-{% endblock %}
 
 {% block content %}
     <div class="register-photo" style="background-color: #ffffff;">
         <div class="form-container">
                 <form class="shadow" method="post" action="">
-                    <h2 class="text-center"><strong>Добавить задачу</strong></h2>
+                    <h2 class="text-center"><strong>Изменить задачу</strong></h2>
                     {{ form.hidden_tag() }}
                     <div class="form-group">
                         {{ form.title(class="form-control", type="text", placeholder="Название задачи") }}
@@ -33,10 +30,10 @@
                         {% endfor %}
                     </div>
                     <div class="form-group">
-                        {{ form.submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
+                        {{ form.edit_submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
+                        {{ form.delete_submit(class="btn btn-primary btn-block", type="submit", style="background-color: #db4c3f;") }}
                     </div>
                 </form>
             </div>
     </div>
 {% endblock %}
-

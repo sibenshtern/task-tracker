@@ -9,13 +9,13 @@
         {% for task in tasks %}
             {% if task.finished %}
                 <div class="task finished" id="{{ task.id }}">
-                    <input type="checkbox" onclick="finish_task('{{ task.id }}')" style="width: 18px; height: 18px" checked>
-                    {{ task.title }}
+                    <div><input type="checkbox" onclick="finish_task('{{ task.id }}')" style="width: 22px; height: 22px" checked>{{ task.title }}</div>
+                    <a href="edit_task/{{ task.id }}"><span class="material-icons">edit</span></a>
                 </div>
             {% else %}
                 <div class="task" id="{{ task.id }}">
-                    <input type="checkbox" onclick="finish_task('{{ task.id }}')" style="width: 18px; height: 18px">
-                    {{ task.title }}
+                    <div><input type="checkbox" onclick="finish_task('{{ task.id }}')" style="width: 22px; height: 22px">{{ task.title }}</div>
+                    <a href="edit_task/{{ task.id }}"><span class="material-icons">edit</span></a>
                 </div>
             {% endif %}
         {% endfor %}

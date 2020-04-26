@@ -4,7 +4,7 @@ from flask_restful import Resource
 from flask_restful import abort, reqparse
 
 from ticktrack.api import utils as api_utils
-from ticktrack.database import utils as db_utils
+from ticktrack.database import users_utils, tasks_utils
 from ticktrack.database.models import User, Task
 
 parser = reqparse.RequestParser()
@@ -24,18 +24,18 @@ class TaskResource(Resource):
         args = parser.parse_args()
 
         self.check_apikey(args.apikey)
-        user = db_utils.return_user(apikey=args.apikey)
+        user = users_utils.return_user(apikey=args.apikey)
 
         self.check_task_id(user, args.task_id)
 
-        task = db_utils.return_task(user.id, args.task_id)
+        task = tasks_utils.return_task(user.id, args.task_id)
         return task.json()
 
     def put(self):
         args = parser.parse_args()
 
         self.check_apikey(args.apikey)
-        user = db_utils.return_user(apikey=args.apikey)
+        user = users_utils.return_user(apikey=args.apikey)
 
         self.check_task_id(user, args.task_id)
 
@@ -46,7 +46,7 @@ class TaskResource(Resource):
             user.save()
             return jsonify({'status': 'OK', 'message': 'status changed'})
         elif args.action.startswith('update'):
-            task = db_utils.return_task(user.id, args.task_id)
+            task = tasks_utils.return_task(user.id, args.task_id)
 
             if args.title:
                 task.title = args.title

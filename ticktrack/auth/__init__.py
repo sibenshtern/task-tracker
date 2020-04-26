@@ -6,7 +6,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import redirect
 
 from ticktrack.auth import forms
-from ticktrack.database import utils as db_utils
+from ticktrack.database import users_utils
 
 
 blueprint = Blueprint('auth', __name__, template_folder='templates')
@@ -26,7 +26,7 @@ def login_page():
     form = forms.LoginForm()
 
     if form.validate_on_submit():
-        user = db_utils.return_user(email=form.email.data.strip())
+        user = users_utils.return_user(email=form.email.data.strip())
         if user is not None:
             if user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
@@ -52,14 +52,14 @@ def signup_page():
             return render_template(
                 'auth/signup.html', form=form, title='Регистрация'
             )
-        if db_utils.return_user(email=form.email.data) is not None:
+        if users_utils.return_user(email=form.email.data) is not None:
             return render_template(
                 'auth/signup.html', form=form, title='Регистрация',
                 message="Пользователь с такой почтой уже зарегистрирован. "
                         "Повторите попытку"
             )
 
-        db_utils.create_user(
+        users_utils.create_user(
             form.email.data, form.name.data, form.password.data
         )
 
