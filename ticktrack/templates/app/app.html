@@ -118,7 +118,7 @@
         function finish_task(task_id)
         {
             $.ajax({
-                url: `/api/task?apikey={{ current_user.return_apikey() }}&task_id=${task_id}&action=change_status`,
+                url: `/api/{{ current_user.return_apikey() }}/task/${task_id}?action=change_status`,
                 type: 'PUT'
             });
             $('#task' + task_id).toggleClass('finished');
@@ -127,15 +127,6 @@
         function show_tasks(mark_id)
         {
             window.location.pathname = `/app/show_tasks/${mark_id}`;
-        }
-
-        function delete_mark(mark_id)
-        {
-            $.ajax({
-                url:  '/api?' + 'apikey=' + '{{ current_user.return_apikey() }}' + '&mark_id=' + mark_id,
-                type: 'DELETE'
-            });
-            location.reload();
         }
 
         $(document).ready(function ()

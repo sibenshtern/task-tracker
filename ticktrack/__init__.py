@@ -21,7 +21,7 @@ login_manager = LoginManager()
 login_manager.init_app(app) # noqa
 
 api = Api(app) # noqa
-api.add_resource(TaskResource, '/api/task')
+api.add_resource(TaskResource, '/api/<string:apikey>/task/<int:task_id>')
 
 
 app.register_blueprint(app_blueprint, url_prefix="/app")

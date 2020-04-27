@@ -15,7 +15,7 @@ class Mark(EmbeddedMongoModel):
     color = fields.CharField(min_length=6)
 
     def json(self):
-        return {'title': self.title}
+        return {'id': self.id, 'title': self.title}
 
     class Meta:
         final = True
@@ -42,7 +42,8 @@ class Task(EmbeddedMongoModel):
     def json(self):
         return {
             'id': self.id, 'title': self.title, 'finished': self.finished,
-            'marks': self.marks, 'finish_date': str(self.finish_date)
+            'marks': [mark.json() for mark in self.marks],
+            'finish_date': str(self.finish_date)
         }
 
 
