@@ -1,4 +1,5 @@
 from flask import Blueprint
+from flask import render_template
 
 
 blueprint = Blueprint('about', __name__, template_folder='templates')
@@ -11,4 +12,4 @@ def about_api():
 
 @blueprint.route('/team')
 def about_team():
-    return 'ПУСТО'
+    return render_template('about/team.html')
