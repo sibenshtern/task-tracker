@@ -1,0 +1,241 @@
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    min-width: 250px;
+    max-width: 250px;
+
+    background-color: #eff0f3;
+    color: #2a2a2a;
+
+    transition: all 0.15s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar ul {
+    width: 100%;
+}
+
+.sidebar-component, .sidebar-dropdown {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 5px;
+
+    margin: 0.6rem 1.1rem 0.6rem 1.1rem;
+    padding: 0.5rem 0.3rem 0.5rem 0.3rem;
+
+    /* Text */
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6rem;
+
+    transition: all 350ms;
+}
+
+.sidebar-dropdown {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 1.4rem 1rem 1.4rem;
+}
+
+.dropdown-controls {
+    display: flex;
+    flex-direction: row;
+    border-radius: 5px;
+    padding: 0.2rem 0.2rem 0.2rem 0.2rem;
+
+    justify-content: space-between;
+    width: 100%;
+
+    align-items: center;
+}
+
+.sidebar-component.active, .dropdown-controls.active {
+    background: #fffffe;
+    transition: all 0.3s;
+}
+
+.sidebar-component.active {
+    font-weight: 600;
+}
+
+.sidebar-component:hover, .dropdown-controls:hover {
+    background: #fffffe;
+}
+
+#sidebarCollapse {
+    width: 40px;
+    height: 40px;
+    background: inherit;
+    cursor: pointer;
+
+    border: none;
+}
+
+#sidebarCollapse span {
+    width: 80%;
+    height: 2px;
+    margin: 0 auto;
+    display: block;
+    background: #fffffe;
+    transition: all 0.6s cubic-bezier(0.810, -0.330, 0.345, 1.375);
+}
+
+#sidebarCollapse span:first-of-type {
+    transform: rotate(45deg) translate(2px, 2px);
+}
+
+#sidebarCollapse span:nth-of-type(2) {
+    opacity: 0;
+}
+
+#sidebarCollapse span:last-of-type {
+    transform: rotate(-45deg) translate(1px, -1px);
+}
+
+#sidebarCollapse.active span {
+    transform: none;
+    opacity: 1;
+    margin: 5px auto;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+        transform: rotateY(90deg);
+    }
+    #sidebar.active {
+        margin-left: 0;
+        transform: none;
+    }
+    #sidebarCollapse span:first-of-type,
+    #sidebarCollapse span:nth-of-type(2),
+    #sidebarCollapse span:last-of-type {
+        transform: none;
+        opacity: 1;
+        margin: 5px auto;
+    }
+    #sidebarCollapse.active span {
+        margin: 0 auto;
+    }
+    #sidebarCollapse.active span:first-of-type {
+        transform: rotate(45deg) translate(2px, 2px);
+    }
+    #sidebarCollapse.active span:nth-of-type(2) {
+        opacity: 0;
+    }
+    #sidebarCollapse.active span:last-of-type {
+        transform: rotate(-45deg) translate(1px, -1px);
+    }
+}
+
+/* button in navbar */
+.menu-button {
+    max-width: 24px;
+    max-height: 24px;
+
+    background: inherit;
+
+    border: none;
+}
+
+.menu-button span {
+    width: 100%;
+    height: 2px;
+    margin: 0 auto;
+    display: block;
+    background: #d9376e;
+    transition: all 0.6s cubic-bezier(0.810, -0.330, 0.345, 1.375);
+}
+
+.menu-button span:first-of-type {
+    transform: rotate(45deg) translate(-2px, -2px);
+}
+
+.menu-button span:last-of-type {
+    transform: rotate(-45deg) translate(-2px, 2px);
+}
+
+.add-link {
+    width: 24px;
+    height: 24px;
+    align-self: flex-end;
+}
+
+.add-link span{
+    display: block;
+    margin: 0 auto;
+    width: 80%;
+    height: 2px;
+    background: #ff8e3c;
+    /*border-radius: 1px;*/
+}
+
+.add-link span:first-of-type {
+    transform: translateY(12px);
+}
+
+.add-link span:last-of-type {
+    transform: rotate(90deg) translateX(10px);
+}
+
+.menu-dropdown {
+    display: none;
+
+    flex-direction: column;
+    background: inherit;
+
+    color: black;
+    font-weight: 400;
+
+    transition: all 0.6s;
+}
+
+.menu-dropdown.active {
+    display: flex;
+    width: 90%;
+    transition: all 0.6s;
+}
+
+.mark-element {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    /*justify-content: space-between;*/
+    align-items: center;
+
+    margin: 0.5rem 0 0.5rem 0;
+    padding: 2px 2px 2px 2px;
+
+    background: #ffffff;
+    border-radius: 5px;
+    color: inherit;
+}
+
+.mark-element a {
+    width: 25px;
+}
+
+.mark-element button {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: inherit;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+    border-radius: 5px;
+}
+
+.mark-element button svg {
+    width: 18px;
+    height: 18px;
+    margin-bottom: 9px;
+}
+

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block own_styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/my_styles/style.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/sidebar.css') }}">
+{% endblock %}
+
+
+{% block app_button %}
+    <button type="button" id="sidebarCollapse" class="navbar-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+{% endblock %}
+
+
+{% block content %}
+    <div id="wrapper">
+        <nav id="sidebar">
+            <div class="nav nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="active sidebar-component" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Общая информация</a>
+                <a class="sidebar-component" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Работа с задачами</a>
+            </div>
+        </nav>
+        <div class="page-content">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    <h1>Общая информация:</h1>
+                      <ol>
+                          <li>Использовать API можно только после <a href="/signup">регистрации</a> на сайте</li>
+                          <li>Получить API ключ можно <a href="/app/apikey">здесь</a> (доступно только после
+                              <a href="/login">авторизации</a>), или в меню, во вкладке &laquo;Ваш API ключ&raquo;
+                          </li>
+                      </ol>
+                </div>
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <h1>Работа с задачами:</h1>
+                  <h3>Работа с одной задачей:</h3>
+                  <ol>
+                      <li>Ссылка, по которой строятся запросы: <code>https://ticktrackapp.herokuapp.com/api/&#8249;ваш API ключ&#8250;/task/&#8249;id задачи&#8250;</code></li>
+                      <li>
+                          Возможные методы запроса:
+                          <ul>
+                              <li>GET - не требуется аргументы. Возвращает задачу в виде json документа</li>
+                              <li>PUT - обязательно требуется аргумент action. Также требуются аргументы title, marks, finish_date, но их можно передать пустыми.</li>
+                          </ul>
+                      </li>
+                  </ol>
+                  <h3>Работа с несколькими задачами:</h3>
+                  <ol>
+                      <li>Ссылка, по которой строятся запросы: <code>https://ticktrackapp.herokuapp.com/api/&#8249;ваш API ключ&#8250;/tasks</code></li>
+                      <li>
+                          Возможные методы:
+                          <ul>
+                              <li>GET - не требуются аргументы. Возвращает все задачи пользователя.</li>
+                              <li>
+                                  POST - требуются следующие аргументы:
+                                  <ol>
+                                      <li>title - название задачи</li>
+                                      <li>marks - id меток. Передаются через ;. Метки с неправильным или с несуществующим id будут игнорироваться</li>
+                                      <li>finish_date - дата выполнения задачи. Формат: день.месяц.год</li>
+                                  </ol>
+                              </li>
+                          </ul>
+                      </li>
+                  </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        function activate_element(element)
+        {
+            $(element).toggleClass('active');
+        }
+        
+        function change_menu()
+        {
+            activate_element('#sidebar');
+            activate_element(this);
+        }
+
+        function dropdown(event)
+        {
+            $(event.target).siblings('.menu-dropdown').toggleClass('active');
+            $(event.target).toggleClass('active');
+        }
+
+        function edit_mark(event)
+        {
+            window.location.pathname = `/app/edit_mark/${event.target.id}`;
+        }
+
+        function finish_task(task_id)
+        {
+            $.ajax({
+                url: `/api/{{ current_user.return_apikey() }}/task/${task_id}?action=change_status`,
+                type: 'PUT'
+            });
+            $('#task' + task_id).toggleClass('finished');
+        }
+
+        function show_tasks(mark_id)
+        {
+            window.location.pathname = `/app/show_tasks/${mark_id}`;
+        }
+
+        $(document).ready(function ()
+        {
+            $('#sidebarCollapse').on('click', change_menu);
+            $('.sidebar-dropdown').on('click', dropdown);
+            $('.mark-title').on('click', edit_mark)
+        });
+
+        let path = window.location.toString().split('/').pop();
+        activate_element("#" + path);
+    </script>
+{% endblock %}

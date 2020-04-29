@@ -7,7 +7,7 @@ blueprint = Blueprint('about', __name__, template_folder='templates')
 
 @blueprint.route('/api')
 def about_api():
-    return 'ПУСТО'
+    return render_template('about/api.html')
 
 
 @blueprint.route('/team')

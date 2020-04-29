@@ -108,7 +108,9 @@ def add_task_page():
             form.finish_date.data.day
         )
 
-        tasks_utils.create_task(form.title.data, marks, finish_date)
+        tasks_utils.create_task(
+            current_user, form.title.data, marks, finish_date
+        )
         return redirect('/app')
 
     return render_template(

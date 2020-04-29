@@ -7,9 +7,9 @@ from ticktrack.database.models import Task
 from ticktrack.database import users_utils
 
 
-def search_max_id_in_tasks():
+def search_max_id_in_tasks(user):
     try:
-        all_tasks = current_user.tasks
+        all_tasks = user.tasks
         return max(all_tasks, key=lambda mark: mark.id).id
     except DoesNotExist:
         return 0
@@ -17,16 +17,16 @@ def search_max_id_in_tasks():
         return 0
 
 
-def create_task(title, marks, finish_date):
-    task = Task(id=search_max_id_in_tasks() + 1, title=title)
+def create_task(user, title, marks, finish_date):
+    task = Task(id=search_max_id_in_tasks(user) + 1, title=title)
 
     if len(marks) > 0:
         task.marks = marks
 
     task.set_finish_date(finish_date)
 
-    current_user.tasks.append(task)
-    current_user.save()
+    user.tasks.append(task)
+    user.save()
 
 
 def return_today_tasks(user_id: int):
