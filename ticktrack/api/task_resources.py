@@ -10,7 +10,7 @@ from marshmallow import ValidationError
 from . import utils as api_utils
 from ticktrack.database import users_utils, tasks_utils, marks_utils
 
-from .sсhema import TaskSchema
+from ticktrack.api.schema import TaskSchema
 
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, required=True)
@@ -53,6 +53,22 @@ class TaskResource(Resource):
         else:
             return abort(404, message="Action is required")
 
+    def delete(self, apikey, task_id):
+        api_utils.check_apikey(apikey)
+        user = users_utils.return_user(apikey=apikey)
+
+        self.check_task_id(user, task_id)
+        for task in user.tasks:
+            if task.id == task_id:
+                del task
+
+        return jsonify(
+            {
+                'status': 'OK', 'message':
+                f'Successful delete task with ID: {task_id}'
+            }
+        )
+
     @staticmethod
     def check_task_id(user, task_id):
         task_obj = {
@@ -84,7 +100,6 @@ class TaskListResource(Resource):
         task_scheme = TaskSchema()
 
         try:
-            print(args.title)
             result = task_scheme.load(
                 {
                     'title': args.title,

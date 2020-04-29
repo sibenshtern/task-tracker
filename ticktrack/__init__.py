@@ -10,7 +10,8 @@ from ticktrack.app import blueprint as app_blueprint
 from ticktrack.auth import blueprint as auth_blueprint
 from ticktrack.about import blueprint as about_blueprint
 from ticktrack.other import blueprint as other_blueprint
-from ticktrack.api import TaskResource, TaskListResource
+from ticktrack.api.task_resources import TaskResource, TaskListResource
+from ticktrack.api.mark_resources import MarkResource, MarkListResource
 
 
 app = Flask(__name__)
@@ -23,6 +24,9 @@ login_manager.init_app(app) # noqa
 api = Api(app) # noqa
 api.add_resource(TaskResource, '/api/<string:apikey>/task/<int:task_id>')
 api.add_resource(TaskListResource, '/api/<string:apikey>/tasks')
+
+api.add_resource(MarkResource, '/api/<string:apikey>/mark/<int:mark_id>')
+api.add_resource(MarkListResource, '/api/<string:apikey>/marks')
 
 
 app.register_blueprint(app_blueprint, url_prefix="/app")

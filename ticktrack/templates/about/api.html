@@ -21,6 +21,7 @@
             <div class="nav nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="active sidebar-component" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Общая информация</a>
                 <a class="sidebar-component" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Работа с задачами</a>
+                <a class="sidebar-component" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-marks" role="tab" aria-controls="v-pills-profile" aria-selected="false">Работа с марками</a>
             </div>
         </nav>
         <div class="page-content">
@@ -62,6 +63,31 @@
                                       <li>finish_date - дата выполнения задачи. Формат: день.месяц.год</li>
                                   </ol>
                               </li>
+                          </ul>
+                      </li>
+                  </ol>
+                </div>
+                <div class="tab-pane fade" id="v-pills-marks" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <h1>Работа с метками:</h1>
+                  <h3>Работа с одной меткой:</h3>
+                  <ol>
+                      <li>Ссылка, по которой строятся запросы: <code>https://ticktrackapp.herokuapp.com/api/&#8249;ваш API ключ&#8250;/mark/&#8249;id метки&#8250;</code></li>
+                      <li>
+                          Возможные методы запроса:
+                          <ul>
+                              <li>GET - не требуется аргументы. Возвращает метку в виде json документа</li>
+                              <li>PUT - обязательно требуется аргумент title.</li>
+                          </ul>
+                      </li>
+                  </ol>
+                  <h3>Работа с несколькими марками:</h3>
+                  <ol>
+                      <li>Ссылка, по которой строятся запросы: <code>https://ticktrackapp.herokuapp.com/api/&#8249;ваш API ключ&#8250;/marks</code></li>
+                      <li>
+                          Возможные методы:
+                          <ul>
+                              <li>GET - не требуются аргументы. Возвращает все метки пользователя.</li>
+                              <li>POST - требуется аргумент title</li>
                           </ul>
                       </li>
                   </ol>

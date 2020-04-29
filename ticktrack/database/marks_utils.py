@@ -5,9 +5,9 @@ from ticktrack.database.models import Mark
 from ticktrack.database import users_utils
 
 
-def search_max_id_in_marks():
+def search_max_id_in_marks(user):
     try:
-        all_marks = current_user.marks
+        all_marks = user.marks
         return max(all_marks, key=lambda mark: mark.id).id
     except DoesNotExist:
         return 0
@@ -15,10 +15,10 @@ def search_max_id_in_marks():
         return 0
 
 
-def create_mark(title):
-    mark = Mark(id=search_max_id_in_marks() + 1, title=title)
-    current_user.marks.append(mark)
-    current_user.save()
+def create_mark(user, title):
+    mark = Mark(id=search_max_id_in_marks(user) + 1, title=title)
+    user.marks.append(mark)
+    user.save()
 
 
 def return_mark(user_id, mark_id: int = None, title: str = None):
