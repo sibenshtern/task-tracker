@@ -96,7 +96,7 @@
         function finish_task(task_id)
         {
             $.ajax({
-                url: `/api/{{ current_user.return_apikey() }}/task/${task_id}?action=change_status`,
+                url: `/api/{{ current_user.return_apikey() }}/task/${task_id}?action=change_status&title&marks&finish_date`,
                 type: 'PUT'
             });
             $('#task' + task_id).toggleClass('finished');
