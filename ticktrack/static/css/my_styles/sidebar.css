@@ -239,3 +239,11 @@
     margin-bottom: 9px;
 }
 
+a {
+    width: 100%;
+    color: #30cdff;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
