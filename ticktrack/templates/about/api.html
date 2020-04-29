@@ -90,25 +90,6 @@
             $(event.target).toggleClass('active');
         }
 
-        function edit_mark(event)
-        {
-            window.location.pathname = `/app/edit_mark/${event.target.id}`;
-        }
-
-        function finish_task(task_id)
-        {
-            $.ajax({
-                url: `/api/{{ current_user.return_apikey() }}/task/${task_id}?action=change_status`,
-                type: 'PUT'
-            });
-            $('#task' + task_id).toggleClass('finished');
-        }
-
-        function show_tasks(mark_id)
-        {
-            window.location.pathname = `/app/show_tasks/${mark_id}`;
-        }
-
         $(document).ready(function ()
         {
             $('#sidebarCollapse').on('click', change_menu);
