@@ -55,7 +55,7 @@
                     <div class="menu-dropdown">
                         {% for mark in marks %}
                             <div class="mark-element" id="{{ mark.id }}">
-                               {{ mark.title }}
+                                <div class="mark-title" id="{{ mark.id }}">{{ mark.title }}</div>
                                 <button type="submit" onclick="show_tasks('{{ mark.id }}')">Показать задачи</button>
                             </div>
                         {% endfor %}
@@ -111,7 +111,7 @@
         {
             $('#sidebarCollapse').on('click', change_menu);
             $('.sidebar-dropdown').on('click', dropdown);
-            $('.mark-element').on('click', edit_mark)
+            $('.mark-title').on('click', edit_mark)
         });
 
         let path = window.location.toString().split('/').pop();
