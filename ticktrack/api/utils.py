@@ -11,8 +11,8 @@ def abort_if_object_doesnt_exist(obj):
         if tasks_utils.return_task(obj['user_id'], obj['task_id']) is None:
             abort(404, message=obj['message'])
         return None
-    elif obj['obj'].startswith('mark'):
-        if marks_utils.return_mark(obj['user_id'], obj['mark_id']) is None:
+    elif obj['obj'].startswith('mark') and marks_utils.return_mark(
+                obj['user_id'], obj['mark_id']) is None:
             abort(404, message=obj['message'])
 
 

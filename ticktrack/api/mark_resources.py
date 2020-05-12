@@ -98,7 +98,7 @@ class MarkListResource(Resource):
         user = users_utils.return_user(apikey=apikey)
 
         try:
-            result = MarkSchema().load({'title': args.title})
+            MarkSchema().load({'title': args.title})
         except ValidationError as error:
             return jsonify(
                 {'status': 'Something went wrong', 'errors': error.messages}
