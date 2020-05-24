@@ -5,10 +5,10 @@ from flask_restful import abort, reqparse
 
 from marshmallow import ValidationError
 
-from ticktrack.api import utils as api_utils
-from ticktrack.database import marks_utils, users_utils
+from . import utils as api_utils
+from app.database import marks_utils, users_utils
 
-from ticktrack.api.schema import MarkSchema
+from .schema import MarkSchema
 
 
 parser = reqparse.RequestParser()

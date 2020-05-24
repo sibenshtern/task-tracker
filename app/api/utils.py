@@ -1,5 +1,5 @@
 from flask_restful import abort
-from ticktrack.database import users_utils, tasks_utils, marks_utils
+from app.database import users_utils, tasks_utils, marks_utils
 
 
 def abort_if_object_doesnt_exist(obj):

@@ -8,9 +8,9 @@ from flask_restful import abort, reqparse
 from marshmallow import ValidationError
 
 from . import utils as api_utils
-from ticktrack.database import users_utils, tasks_utils, marks_utils
+from app.database import users_utils, tasks_utils, marks_utils
 
-from ticktrack.api.schema import TaskSchema
+from .schema import TaskSchema
 
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, required=True)

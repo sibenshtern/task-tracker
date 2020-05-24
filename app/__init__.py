@@ -4,14 +4,14 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_restful import Api
 
-from ticktrack.database import users_utils
+from .database import users_utils
 
-from ticktrack.app import blueprint as app_blueprint
-from ticktrack.auth import blueprint as auth_blueprint
-from ticktrack.about import blueprint as about_blueprint
-from ticktrack.other import blueprint as other_blueprint
-from ticktrack.api.task_resources import TaskResource, TaskListResource
-from ticktrack.api.mark_resources import MarkResource, MarkListResource
+from .app import blueprint as app_blueprint
+from .auth import blueprint as auth_blueprint
+from .about import blueprint as about_blueprint
+from .other import blueprint as other_blueprint
+from .api.task_resources import TaskResource, TaskListResource
+from .api.mark_resources import MarkResource, MarkListResource
 
 
 app = Flask(__name__)

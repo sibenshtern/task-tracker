@@ -3,8 +3,8 @@ import datetime
 from pymodm.errors import DoesNotExist
 from flask_login import current_user
 
-from ticktrack.database.models import Task
-from ticktrack.database import users_utils
+from .models import Task
+from . import users_utils
 
 
 def search_max_id_in_tasks(user):

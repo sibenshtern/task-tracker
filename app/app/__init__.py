@@ -6,9 +6,9 @@ from flask import render_template, abort
 from flask_login import login_required, current_user
 from werkzeug.utils import redirect
 
-from ticktrack.database import tasks_utils, marks_utils
-from ticktrack.app.forms import AddMarkForm, AddTaskForm, EditMarkForm, \
-    EditTaskForm
+from app.database import tasks_utils, marks_utils
+from .forms import AddMarkForm, AddTaskForm, EditMarkForm, EditTaskForm
+
 
 blueprint = Blueprint('app', __name__, template_folder='templates')
 

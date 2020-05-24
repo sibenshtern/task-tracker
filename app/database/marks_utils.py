@@ -1,8 +1,8 @@
 from flask_login import current_user
 from pymodm.errors import DoesNotExist
 
-from ticktrack.database.models import Mark
-from ticktrack.database import users_utils
+from .models import Mark
+from . import users_utils
 
 
 def search_max_id_in_marks(user):

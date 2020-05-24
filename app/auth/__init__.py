@@ -5,8 +5,8 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 from werkzeug.utils import redirect
 
-from ticktrack.auth import forms
-from ticktrack.database import users_utils
+from . import forms
+from app.database import users_utils
 
 
 blueprint = Blueprint('auth', __name__, template_folder='templates')

@@ -1,7 +1,7 @@
 from pymodm.errors import DoesNotExist
 from flask import current_app
 
-from ticktrack.database.models import User
+from .models import User
 
 
 def search_max_id_in_users():
