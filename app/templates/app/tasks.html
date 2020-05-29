@@ -4,7 +4,7 @@
     <div class="title">Все задачи c меткой &laquo;{{ title }}&raquo;</div>
     <div class="tasks">
         {% for task in tasks %}
-            {% if task.finished %}
+            {% if task.is_finished %}
                 <div class="task finished" id="task{{ task.id }}">
                     <div class="con">
                         <input type="checkbox" onclick="finish_task('{{ task.id }}')" checked>

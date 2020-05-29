@@ -4,8 +4,6 @@ from marshmallow import ValidationError, Schema, validates
 from marshmallow.fields import Str, Date
 from marshmallow.validate import Length
 
-from app.database.marks_utils import return_mark
-
 
 FINISH_DATE_FORMAT = "%d.%m.%Y"
 

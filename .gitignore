@@ -4,4 +4,4 @@ __pycache__
 
 *.log
 _version.py
-appappi.py
+app/db.sqlite

@@ -27,7 +27,7 @@ class EditMarkForm(FlaskForm):
 
 class EditTaskForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
-    marks = SelectMultipleField()
-    finish_date = DateField(validators=[DataRequired()])
-    edit_submit = SubmitField('Изменить задачу')
-    delete_submit = SubmitField('Удалить задачу')
+    labels = SelectMultipleField()
+    finish_date = DateField()
+    edit_button = SubmitField('Изменить задачу')
+    delete_button = SubmitField('Удалить задачу')

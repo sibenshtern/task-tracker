@@ -1,11 +1,12 @@
 {% extends "app/app.html" %}
+{% set title="Задачи на сегодня" %}
 
 
 {% block page_content %}
     <div class="title">Сегодня<a href="add_task">&#43;</a></div>
     <div class="tasks">
         {% for task in tasks %}
-            {% if task.finished %}
+            {% if task.is_finished %}
                 <div class="task finished" id="task{{ task.id }}">
                     <div class="con">
                         <input type="checkbox" onclick="finish_task('{{ task.id }}')" checked>

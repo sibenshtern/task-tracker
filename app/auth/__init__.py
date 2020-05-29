@@ -6,7 +6,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import redirect
 
 from . import forms
-from app.database import users_utils
+from app.database.utils import users_utils
 
 
 blueprint = Blueprint('auth', __name__, template_folder='templates')
@@ -26,7 +26,7 @@ def login_page():
     form = forms.LoginForm()
 
     if form.validate_on_submit():
-        user = users_utils.return_user(email=form.email.data.strip())
+        user = users_utils.get_user(email=form.email.data.strip())
         if user is not None:
             if user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
@@ -34,13 +34,10 @@ def login_page():
 
         return render_template(
             'auth/login.html', form=form,
-            message="Неправильный логин или пароль. Повторите попытку",
-            current_user=current_user
+            message="Неправильный логин или пароль. Повторите попытку"
         )
 
-    return render_template(
-        'auth/login.html', form=form, message=None, current_user=current_user
-    )
+    return render_template('auth/login.html', form=form, message=None)
 
 
 @blueprint.route('/signup', methods=['GET', 'POST'])
@@ -55,12 +52,11 @@ def signup_page():
             return render_template(
                 'auth/signup.html', form=form, title='Регистрация'
             )
-        if users_utils.return_user(email=form.email.data) is not None:
+        if users_utils.get_user(email=form.email.data) is not None:
             return render_template(
                 'auth/signup.html', form=form, title='Регистрация',
                 message="Пользователь с такой почтой уже зарегистрирован. "
-                        "Повторите попытку",
-                current_user=current_user
+                        "Повторите попытку"
             )
 
         users_utils.create_user(
@@ -69,6 +65,4 @@ def signup_page():
 
         return redirect('/login')
 
-    return render_template(
-        'auth/signup.html', form=form, message=None, current_user=current_user
-    )
+    return render_template('auth/signup.html', form=form, message=None)

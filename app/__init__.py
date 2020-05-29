@@ -4,7 +4,10 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_restful import Api
 
-from .database import users_utils
+from . import database
+database.global_init('app/db.sqlite')
+
+from .database import models
 
 from .app import blueprint as app_blueprint
 from .auth import blueprint as auth_blueprint
@@ -16,7 +19,7 @@ from .api.mark_resources import MarkResource, MarkListResource
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
-app.max_id = users_utils.search_max_id_in_users()
+app.config['JSON_AS_ASCII'] = False
 
 login_manager = LoginManager()
 login_manager.init_app(app) # noqa
@@ -25,7 +28,7 @@ api = Api(app) # noqa
 api.add_resource(TaskResource, '/api/<string:apikey>/task/<int:task_id>')
 api.add_resource(TaskListResource, '/api/<string:apikey>/tasks')
 
-api.add_resource(MarkResource, '/api/<string:apikey>/mark/<int:mark_id>')
+api.add_resource(MarkResource, '/api/<string:apikey>/mark/<int:label_id>')
 api.add_resource(MarkListResource, '/api/<string:apikey>/marks')
 
 
@@ -37,4 +40,5 @@ app.register_blueprint(other_blueprint)
 
 @login_manager.user_loader
 def user_loader(user_id):
-    return users_utils.return_user(int(user_id))
+    session = database.create_session()
+    return session.query(models.User).get(user_id)

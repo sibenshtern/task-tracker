@@ -8,7 +8,7 @@ from flask_restful import abort, reqparse
 from marshmallow import ValidationError
 
 from . import utils as api_utils
-from app.database import users_utils, tasks_utils, marks_utils
+from app.database.utils import users_utils, tasks_utils, labels_utils
 
 from .schema import TaskSchema
 
@@ -19,7 +19,11 @@ parser.add_argument('finish_date', type=str, required=True)
 
 # Аргумент, специально для PUT запроса
 parser.add_argument(
-    'action', choices=('change_status'), help="Bas choice: {error_msg}."
+    'action', choices=('change_status', ), help="Bas choice: {error_msg}."
+)
+TASK_ARGS = (
+    "id", "user_id", "title", "is_finished", "labels", "modified_date",
+    "finish_date"
 )
 
 
@@ -28,27 +32,28 @@ class TaskResource(Resource):
     def get(self, apikey, task_id):
 
         api_utils.check_apikey(apikey)
-        user = users_utils.return_user(apikey=apikey)
+        user = users_utils.get_user(apikey=apikey)
 
         self.check_task_id(user, task_id)
 
-        task = tasks_utils.return_task(user.id, task_id)
-        return task.json()
+        task = tasks_utils.get_task(user.id, task_id)
+        return jsonify({
+            "task": task.to_dict(only=TASK_ARGS)
+        })
 
     def put(self, apikey, task_id):
         args = parser.parse_args()
 
         api_utils.check_apikey(apikey)
-        user = users_utils.return_user(apikey=apikey)
+        user = users_utils.get_user(apikey=apikey)
 
         self.check_task_id(user, task_id)
 
         if args.action:
             if args.action.startswith('change_status'):
-                for task in user.tasks:
-                    if task.id == task_id:
-                        task.finished = not task.finished
-                user.save()
+                task = tasks_utils.get_task(user.id, task_id)
+                task.change_status()
+                tasks_utils.session.commit()
                 return jsonify({'status': 'OK', 'message': 'status changed'})
         else:
             return abort(404, message="Action is required")
@@ -58,9 +63,8 @@ class TaskResource(Resource):
         user = users_utils.return_user(apikey=apikey)
 
         self.check_task_id(user, task_id)
-        for task in user.tasks:
-            if task.id == task_id:
-                del task
+
+        tasks_utils.delete_task(user.id, task_id)
 
         return jsonify(
             {
@@ -75,7 +79,7 @@ class TaskResource(Resource):
             'obj': 'task', 'user_id': user.id, 'task_id': task_id,
             'message': f"Task with ID: {task_id} not found"
         }
-        return api_utils.abort_if_object_doesnt_exist(task_obj) is None
+        return api_utils.abort_if_obj_doesnt_exist(task_obj) is None
 
 
 class TaskListResource(Resource):
@@ -110,12 +114,12 @@ class TaskListResource(Resource):
         except ValidationError as error:
             abort(404, message=error.messages)
 
-        marks_ids = list(map(int, result['marks'].split(';')))  # noqa
+        labels_ids = list(map(int, result['marks'].split(';')))  # noqa
 
         marks_objects = [
-            marks_utils.return_mark(user.id, mark_id)
-            for mark_id in marks_ids
-            if marks_utils.return_mark(user.id, mark_id) is not None
+            labels_utils.return_label(user.id, label_id)
+            for label_id in labels_ids
+            if labels_utils.return_label(user.id, label_id) is not None
         ]
 
         tasks_utils.create_task(
@@ -128,4 +132,4 @@ class TaskListResource(Resource):
         user_obj = {
             'obj': 'user', 'apikey': apikey, 'message': 'Invalid apikey.'
         }
-        return api_utils.abort_if_object_doesnt_exist(user_obj) is None
+        return api_utils.abort_if_obj_doesnt_exist(user_obj) is None

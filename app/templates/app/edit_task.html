@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% set title = "Изменить задачу" %}
 
 {% block content %}
     <div class="register-photo" style="background-color: #ffffff;">
@@ -17,8 +17,8 @@
                     </div>
                     <div class="form-group">
                         <div class="input-title">Метки</div>
-                        {{ form.marks(class="form-control", id="marks") }}
-                        {% for error in form.marks.errors %}
+                        {{ form.labels(class="form-control", id="marks") }}
+                        {% for error in form.labels.errors %}
                             <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem">{{ error }}</div>
                         {% endfor %}
                     </div>
@@ -30,8 +30,8 @@
                         {% endfor %}
                     </div>
                     <div class="form-group">
-                        {{ form.edit_submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
-                        {{ form.delete_submit(class="btn btn-primary btn-block", type="submit", style="background-color: #db4c3f;") }}
+                        {{ form.edit_button(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
+                        {{ form.delete_button(class="btn btn-primary btn-block", type="submit", style="background-color: #db4c3f;") }}
                     </div>
                 </form>
             </div>

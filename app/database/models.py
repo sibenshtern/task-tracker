@@ -1,66 +1,35 @@
 import datetime
-from string import ascii_letters
-from random import choice
-
-from pymodm import MongoModel, EmbeddedMongoModel, fields
-from pymongo.write_concern import WriteConcern
+from random import shuffle
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+import sqlalchemy
+from sqlalchemy import Integer, String, Boolean, Date, orm
+from sqlalchemy_serializer import SerializerMixin
 
-class Mark(EmbeddedMongoModel):
-    id = fields.IntegerField(primary_key=True)
-    title = fields.CharField(min_length=1, required=True)
-    color = fields.CharField(min_length=6)
-
-    def json(self):
-        return {'id': self.id, 'title': self.title}
-
-    class Meta:
-        final = True
+from . import SqlAlchemyBase
 
 
-class Task(EmbeddedMongoModel):
-    id = fields.IntegerField(primary_key=True)
-    title = fields.CharField(default="Untitled")
-    finished = fields.BooleanField(default=False)
+class User(SqlAlchemyBase, SerializerMixin, UserMixin):
+    __tablename__ = "users"
 
-    marks = fields.EmbeddedDocumentListField(Mark)
-    modified_date = fields.DateTimeField(default=datetime.datetime.now)
-    finish_date = fields.DateTimeField()
+    id = sqlalchemy.Column(Integer, primary_key=True, autoincrement=True)
 
-    def set_modified_date(self):
-        self.modified_date = datetime.datetime.now()
+    name = sqlalchemy.Column(String)
 
-    def set_finish_date(self, date):
-        self.finish_date = date
-
-    def change_status(self):
-        self.finished = not self.finished
-
-    def json(self):
-        return {
-            'id': self.id, 'title': self.title, 'finished': self.finished,
-            'marks': [mark.json() for mark in self.marks],
-            'finish_date': str(self.finish_date)
-        }
-
-
-class User(MongoModel, UserMixin):
-    id = fields.IntegerField(primary_key=True)
-    email = fields.EmailField(required=True)
-    hashed_password = fields.CharField(min_length=1)
-    apikey = fields.CharField()
-    name = fields.CharField(required=True, min_length=1)
-
-    tasks = fields.EmbeddedDocumentListField(Task)
-    marks = fields.EmbeddedDocumentListField(Mark)
+    email = sqlalchemy.Column(String)
+    hashed_password = sqlalchemy.Column(String, nullable=True)
+    apikey = sqlalchemy.Column(String, unique=True, nullable=True)
 
     def generate_apikey(self):
-        symbols = list(ascii_letters) + list('1234567890')
-        self.apikey = ''.join(choice(symbols) for _ in range(30))
-        print(self.apikey)
+        if self.apikey is None:
+            possible_symbols = list(''.join([self.name, self.email]))
+            shuffle(possible_symbols)
+            pre_apikey = ''.join(possible_symbols)
+            self.apikey = generate_password_hash(pre_apikey).split('$')[-1]
+        else:
+            raise Exception("API key already generated")
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
@@ -68,10 +37,49 @@ class User(MongoModel, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
 
-    def return_apikey(self):
-        return self.apikey
 
-    class Meta:
-        cascade = True
-        write_concern = WriteConcern(j=True)
-        connection_alias = "mongodb_app"
+class Task(SqlAlchemyBase, SerializerMixin):
+    __tablename__ = "tasks"
+
+    id = sqlalchemy.Column(Integer, primary_key=True, autoincrement=True)
+    user_id = sqlalchemy.Column(Integer, sqlalchemy.ForeignKey("users.id"))
+
+    title = sqlalchemy.Column(String, default="Untitled", nullable=True)
+    is_finished = sqlalchemy.Column(Boolean, default=False)
+    
+    labels = orm.relation(
+        'Label', secondary="tasks_to_labels", backref="tasks"
+    )
+
+    modified_date = sqlalchemy.Column(Date, default=datetime.date.today())
+    finish_date = sqlalchemy.Column(Date, nullable=True)
+
+    def change_modified_date(self):
+        self.modified_date = datetime.date.today()
+
+    def change_finish_date(self, date: datetime.date):
+        self.finish_date = date
+
+    def change_status(self):
+        self.is_finished = not self.is_finished
+
+
+class Label(SqlAlchemyBase, SerializerMixin):
+    __tablename__ = "labels"
+
+    serialize_only = ("id", "user_id", "title", "color")
+
+    id = sqlalchemy.Column(Integer, primary_key=True, autoincrement=True)
+    user_id = sqlalchemy.Column(Integer, sqlalchemy.ForeignKey('users.id'))
+
+    title = sqlalchemy.Column(String)
+    color = sqlalchemy.Column(String, nullable=True)
+
+
+association_table = sqlalchemy.Table(
+    'tasks_to_labels', SqlAlchemyBase.metadata,
+    sqlalchemy.Column('tasks', Integer, sqlalchemy.ForeignKey('tasks.id')),
+    sqlalchemy.Column('labels', Integer, sqlalchemy.ForeignKey('labels.id'))
+)
+
+
