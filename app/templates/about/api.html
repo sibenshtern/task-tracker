@@ -96,34 +96,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block scripts %}
-    <script type="text/javascript">
-        function activate_element(element)
-        {
-            $(element).toggleClass('active');
-        }
-        
-        function change_menu()
-        {
-            activate_element('#sidebar');
-            activate_element(this);
-        }
-
-        function dropdown(event)
-        {
-            $(event.target).siblings('.menu-dropdown').toggleClass('active');
-            $(event.target).toggleClass('active');
-        }
-
-        $(document).ready(function ()
-        {
-            $('#sidebarCollapse').on('click', change_menu);
-            $('.sidebar-dropdown').on('click', dropdown);
-            $('.mark-title').on('click', edit_mark)
-        });
-
-        let path = window.location.toString().split('/').pop();
-        activate_element("#" + path);
-    </script>
-{% endblock %}

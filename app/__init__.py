@@ -1,8 +1,7 @@
-import os
-
 from flask import Flask
 from flask_login import LoginManager
 from flask_restful import Api
+from flask_mail import Mail
 
 from . import database
 database.global_init('app/db.sqlite')
@@ -10,16 +9,20 @@ database.global_init('app/db.sqlite')
 from .database import models
 
 from .app import blueprint as app_blueprint
-from .auth import blueprint as auth_blueprint
 from .about import blueprint as about_blueprint
 from .other import blueprint as other_blueprint
 from .api.task_resources import TaskResource, TaskListResource
 from .api.mark_resources import MarkResource, MarkListResource
 
+from . import config
 
 app = Flask(__name__)
-app.secret_key = os.urandom(16)
-app.config['JSON_AS_ASCII'] = False
+app.config.from_object(config.DebugConfig)
+
+mail = Mail()
+mail.init_app(app)
+
+from .auth import blueprint as auth_blueprint
 
 login_manager = LoginManager()
 login_manager.init_app(app) # noqa

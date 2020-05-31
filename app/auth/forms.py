@@ -25,3 +25,24 @@ class SignupForm(FlaskForm):
         ]
     )
     submit = SubmitField('Зарегистрироваться')
+
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = EmailField("Email", validators=[DataRequired()])
+    submit = SubmitField("Reset password")
+
+
+class ResetPasswordForm(FlaskForm):
+    new_password = PasswordField(
+        validators=[
+            DataRequired(),
+            EqualTo('confirm_new_password', message="Пароли должны совпадать")
+        ]
+    )
+    confirm_new_password = PasswordField(
+        validators=[
+            DataRequired(),
+            EqualTo('new_password', message="Пароли должны совпадать")
+        ]
+    )
+    submit = SubmitField("Изменить пароль")

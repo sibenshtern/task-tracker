@@ -5,3 +5,6 @@ __pycache__
 *.log
 _version.py
 app/db.sqlite
+alembic
+alembic.ini
+app/static/img/photo.png

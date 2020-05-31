@@ -1,12 +1,12 @@
 from flask import Blueprint
-from flask import render_template
+from flask import render_template, flash, request
 
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, logout_user, current_user
 
 from werkzeug.utils import redirect
 
-from . import forms
-from app.database.utils import users_utils
+from . import forms, email
+from app.database.utils import users_utils, session
 
 
 blueprint = Blueprint('auth', __name__, template_folder='templates')
@@ -66,3 +66,38 @@ def signup_page():
         return redirect('/login')
 
     return render_template('auth/signup.html', form=form, message=None)
+
+
+@blueprint.route('/reset_password', methods=["GET", "POST"])
+def reset_password():
+    if current_user.is_authenticated:
+        return redirect('/app')
+
+    token = request.args.get("token")
+    if token is not None:
+        user = users_utils.verify_jwt_token(token)
+
+        if user is None:
+            redirect('/')
+
+        form = forms.ResetPasswordForm()
+
+        if form.validate_on_submit():
+            user.set_password(form.new_password.data)
+            session.commit()
+
+            redirect('/login')
+
+        return redirect('auth/reset_password.html')
+    else:
+        form = forms.ResetPasswordRequestForm()
+
+        if form.validate_on_submit():
+            user = users_utils.get_user(email=form.email.data)
+            if user is not None:
+                email.send_reset_password_email(user)
+
+            flash("Проверьте свою почту для интрукций по сбросу пароля")
+            return redirect('/login')
+
+        return render_template("auth/reset_password_request.html", form=form)

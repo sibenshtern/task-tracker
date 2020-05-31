@@ -1,6 +1,9 @@
 from datetime import date
 from typing import List, Optional
 
+import jwt
+from flask import current_app
+
 from . import create_session, models
 
 
@@ -30,6 +33,49 @@ class UserUtils:
             ).first()
         else:
             raise ValueError("You don't give any keywords arguments")
+
+    @staticmethod
+    def generate_jwt_token(payloads: dict) -> str:
+        """
+
+        :param payloads: Словарь с полезной информацией
+        :return: Токен, в котором зашифрована полезная информация из
+        payloads
+        """
+
+        jwt_token = jwt.encode(
+            payloads, current_app.secret_key, algorithm="HS256"
+        )
+        return jwt_token
+
+    def verify_jwt_token(self, token: str) -> Optional[models.User]:
+        """
+
+        :param token: JSON Web Token
+        :return: пользователя по id, которое зашифровано в token
+        """
+        try:
+            payloads = jwt.decode(
+                token, current_app.secret_key, algoritms=["HS256"]
+            )
+        except Exception as error:
+            print(error)
+            return None
+
+        action_from_payloads = payloads.get('action')
+        if action_from_payloads is not None:
+            if action_from_payloads.startswith("reset_password"):
+                user_id = payloads.get("user_id")
+            elif action_from_payloads.startswith("verify_account"):
+                user_id = payloads.get("user_id")
+            else:
+                raise Exception("Wrong action")
+
+            user = self.get_user(user_id=user_id)
+        else:
+            raise Exception("Action is undefined")
+
+        return user
 
 
 class TasksUtils:

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set title = "Вход в аккаунт" %}
 
 {% block own_styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename="css/my_styles/auth-styles.css") }}">
@@ -32,6 +33,7 @@
                     {{ form.submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
                 </div>
                 <a class="already" href="/signup">У вас нет аккаунта? Зарегистрируйтесь</a>
+                <a href="/reset_password_request" class="already">Забыли пароль? Восстановите его</a>
             </form>
         </div>
     </div>

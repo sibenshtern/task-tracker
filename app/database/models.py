@@ -22,6 +22,8 @@ class User(SqlAlchemyBase, SerializerMixin, UserMixin):
     hashed_password = sqlalchemy.Column(String, nullable=True)
     apikey = sqlalchemy.Column(String, unique=True, nullable=True)
 
+    is_verified = sqlalchemy.Column(Boolean, default=False)
+
     def generate_apikey(self):
         if self.apikey is None:
             possible_symbols = list(''.join([self.name, self.email]))
@@ -31,11 +33,14 @@ class User(SqlAlchemyBase, SerializerMixin, UserMixin):
         else:
             raise Exception("API key already generated")
 
-    def set_password(self, password):
+    def set_password(self, password: str) -> None:
         self.hashed_password = generate_password_hash(password)
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
         return check_password_hash(self.hashed_password, password)
+
+    def verify(self):
+        self.is_verified = True
 
 
 class Task(SqlAlchemyBase, SerializerMixin):
