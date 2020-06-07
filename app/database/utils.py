@@ -12,13 +12,15 @@ class UserUtils:
     def __init__(self, database_session):
         self.session = database_session
 
-    def create_user(self, email: str, name: str, password: str) -> None:
+    def create_user(self, email: str, name: str, password: str) -> models.User:
         user = models.User(email=email, name=name)
         user.set_password(password)
         user.generate_apikey()
 
         self.session.add(user)
         self.session.commit()
+
+        return user
 
     def get_user(self, **kwargs) -> Optional[models.User]:
         if kwargs.get('user_id') is not None:
@@ -85,7 +87,7 @@ class TasksUtils:
 
     def create_task(
             self, user_id: int, title: str, labels: List[models.Label],
-            finish_date: Optional[date] = None) -> None:
+            finish_date: Optional[date] = None) -> models.Task:
         task = models.Task(user_id=user_id, title=title)
 
         if finish_date is not None:
@@ -94,6 +96,8 @@ class TasksUtils:
         task.labels.extend(labels)
         self.session.add(task)
         self.session.commit()
+
+        return task
 
     def get_task(self, user_id: int, task_id: int) -> Optional[models.Task]:
         return self.session.query(models.Task).filter(

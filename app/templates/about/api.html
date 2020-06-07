@@ -2,7 +2,7 @@
 
 {% block own_styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename="css/my_styles/style.css") }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/sidebar-style.css') }}">
 {% endblock %}
 
 
@@ -18,6 +18,11 @@
 {% block content %}
     <div id="wrapper">
         <nav id="sidebar">
+            <div id="dismiss">
+                <div style="padding: 5px 10px 5px 10px; margin: 20px 10px 0 0; background-color: white;">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+            </div>
             <div class="nav nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="active sidebar-component" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Общая информация</a>
                 <a class="sidebar-component" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Работа с задачами</a>
@@ -95,4 +100,30 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function activate_element(element)
+        {
+            $(element).toggleClass('active');
+        }
+
+        function change_menu()
+        {
+            activate_element('#sidebar');
+            activate_element('.overlay');
+            activate_element(this);
+        }
+
+        $(document).ready(function ()
+        {
+            $('#sidebarCollapse').on('click', change_menu);
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+                $('#sidebarCollapse').removeClass('active');
+             });
+        });
+    </script>
 {% endblock %}

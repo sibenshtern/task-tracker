@@ -39,7 +39,10 @@
                     {% endfor %}
                 </div>
                 <div class="form-group">
-                    {{ form.submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
+                    {{ form.submit(
+                            class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;",
+                            onclick="alert('На указанную вами почту отправлено письмо, для подтверждения почты. Без подтверждения почты вы не сможете использовать api приложения :)')"
+                        ) }}
                 </div>
                 <a class="already" href="/login">У вас уже есть аккаунт? Войдите</a>
             </form>

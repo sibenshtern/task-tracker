@@ -3,72 +3,81 @@ from flask import jsonify
 from flask_restful import Resource
 from flask_restful import reqparse
 
-from marshmallow import ValidationError
-
 from . import utils as api_utils
-from app.database.utils import labels_utils, users_utils
-
-from .schema import MarkSchema
+from app.database.utils import labels_utils
 
 
 parser = reqparse.RequestParser()
-
 parser.add_argument('title', type=str, required=True)
 
-LABELS_ARGS = ("id", "user_id", "title", "color")
+LABEL_ARGS = ("id", "user_id", "title", "color")
+LABEL_TYPE = "label"
 
 
-class MarkResource(Resource):
+class LabelResource(Resource):
 
     def get(self, apikey, label_id):
-        api_utils.check_apikey(apikey)
-        # Если apikey неправильный, то функция вызовет abort,
-        # что приведет к выходу из функции get
-
-        user = users_utils.get_user(apikey=apikey)
+        user = api_utils.check_and_return_user_by_apikey(apikey)
         self.check_label_id(user, label_id)
-
-        return jsonify({
-            'label':
-                labels_utils.get_label(user.id, label_id=label_id).to_dict(
-                    only=LABELS_ARGS
-                )
-        })
+        return jsonify(
+            {
+                'error': False,
+                'status_code': 200,
+                'object': {
+                    "type": LABEL_TYPE,
+                    "content": labels_utils.get_label(
+                        user.id, label_id=label_id
+                    ).to_dict(only=LABEL_ARGS)
+                }
+            }
+        )
 
     def put(self, apikey, label_id):
         args = parser.parse_args()
-
-        api_utils.check_apikey(apikey)
-        user = users_utils.get_user(apikey=apikey)
-
+        user = api_utils.check_and_return_user_by_apikey(apikey)
         self.check_label_id(user, label_id)
 
-        try:
-            result = MarkSchema().load({'title': args.title})
-        except ValidationError as error:
-            return jsonify(
-                {'status': 'Something went wrong', 'errors': error.messages}
-            )
-        for label in labels_utils.get_labels(user.id):
-            if label.id == label_id:
-                label.title = result['title']
-                labels_utils.session.commit()
+        # Проверяю, что название задачи правильное
+        if not 1 < len(args.title) < 16:
+            return {
+                'error': True,
+                'status_code': 404,
+                'error_message':
+                    "Label's length must be more than 1, but less than 16"
+            }, 404
+
+        label = labels_utils.get_label(user.id, label_id=label_id)
+        label.title = args.title
+        labels_utils.session.commit()
 
         return jsonify(
-            {'status': 'OK', 'message': f'Update mark with ID: {label_id}'}
+            {
+                'error': False,
+                'status_code': 200,
+                'object': {
+                    'type': LABEL_TYPE,
+                    'content': label.to_dict(only=LABEL_ARGS),
+                    'status': 'updated'
+                }
+            }
         )
 
     def delete(self, apikey, label_id):
-        api_utils.check_apikey(apikey)
-        user = users_utils.get_user(apikey=apikey)
+        user = api_utils.check_and_return_user_by_apikey(apikey)
         self.check_label_id(user, label_id)
 
+        label = labels_utils.get_label(user.id, label_id=label_id)
         labels_utils.delete_label(user.id, label_id=label_id)
 
         return jsonify(
             {
-                'status': 'OK',
-                'message': f'Successful delete mark with ID: {label_id}'
+                'error': False,
+                'status_code': 200,
+                'object': {
+                    'type': LABEL_TYPE,
+                    'content': label.to_dict(only=LABEL_ARGS),
+                    'status': 'deleted'
+                }
             }
         )
 
@@ -81,36 +90,45 @@ class MarkResource(Resource):
         api_utils.abort_if_obj_doesnt_exist(label_obj)
 
 
-class MarkListResource(Resource):
+class LabelListResource(Resource):
 
-    def get(self, apikey):
-        api_utils.check_apikey(apikey)
-        user = users_utils.get_user(apikey=apikey)
+    @staticmethod
+    def get(apikey):
+        user = api_utils.check_and_return_user_by_apikey(apikey)
 
-        return jsonify({
-            'marks': [
-                mark.to_dict(only=LABELS_ARGS)
-                for mark in labels_utils.get_labels(user.id)
-            ]
-        })
-
-    def post(self, apikey):
-        args = parser.parse_args()
-
-        api_utils.check_apikey(apikey)
-        user = users_utils.get_user(apikey=apikey)
-
-        try:
-            MarkSchema().load({'title': args.title})
-        except ValidationError as error:
-            return jsonify(
-                {'status': 'Something went wrong', 'errors': error.messages}
-            )
-
-        labels_utils.create_label(user, args.title)
         return jsonify(
             {
-                'status': 'OK',
-                'message': f"Successful create mark with title: {args.title}"
+                'error': False,
+                'status_code': 200,
+                'objects': [
+                    label.to_dict(only=LABEL_ARGS)
+                    for label in labels_utils.get_labels(user.id)
+                ]
+            }
+        )
+
+    @staticmethod
+    def post(apikey):
+        args = parser.parse_args()
+        user = api_utils.check_and_return_user_by_apikey(apikey)
+
+        if not 1 < len(args.title) < 16:
+            return {
+                'error': True,
+                'status_code': 404,
+                'error_message':
+                    "Label's length must be more than 1, but less than 16"
+            }, 404
+
+        labels_utils.create_label(user.id, args.title)
+        return jsonify(
+            {
+                'error': False,
+                'status_code': 200,
+                'object':
+                    labels_utils.get_label(
+                        user.id, title=args.title
+                    ).to_dict(only=LABEL_ARGS),
+                'status': 'created'
             }
         )

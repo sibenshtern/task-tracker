@@ -34,7 +34,7 @@
                     <div class="dropdown">
                         <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button" style="width: fit-content; color: #fffffe; font-size: 18px">Меню</button>
                         <div role="menu" class="dropdown-menu dropdown-menu-right">
-                            <a role="presentation" class="dropdown-item" href="/app/apikey">Ваш API ключ</a>
+                            <a role="presentation" class="dropdown-item" href="/main_app/apikey">Ваш API ключ</a>
                             <div role="presentation" class="dropdown-divider"></div>
                             <a role="presentation" class="dropdown-item" href="/logout">Выйти из аккаунта</a>
                         </div>
@@ -47,6 +47,7 @@
     {% block content %}{% endblock %}
     {% block footer %}{% endblock %}
 
+    <div class="overlay"></div>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>

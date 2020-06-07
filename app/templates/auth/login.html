@@ -29,11 +29,11 @@
                 <div class="form-group">
                     <div class="form-check"><label class="form-check-label">{{ form.remember_me(class="form-check-input", type="checkbox") }}Запомнить меня</label></div>
                 </div>
-                <div class="form-group">
-                    {{ form.submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
-                </div>
+                    <div class="submit">
+                        {{ form.submit(class="btn btn-primary btn-block", type="submit", style="background-color: #ff8e3c;") }}
+                    </div>
                 <a class="already" href="/signup">У вас нет аккаунта? Зарегистрируйтесь</a>
-                <a href="/reset_password_request" class="already">Забыли пароль? Восстановите его</a>
+                <a href="/reset_password" class="already">Забыли пароль? Восстановите его</a>
             </form>
         </div>
     </div>

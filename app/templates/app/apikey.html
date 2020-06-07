@@ -1,7 +1,15 @@
 {% extends "base.html" %}
+{% set title = "Ваш API key" %}
 
 {% block content %}
-    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center">
-        <h3>Ваш API ключ:&nbsp;&nbsp;</h3><div style="font-size: 18px">{{ apikey }}</div>
-    </div>
+    {% if current_user.is_verified %}
+        <div style="display: flex; flex-direction: row; justify-content: center; align-items: center">
+            <h3>Ваш API ключ:&nbsp;&nbsp;</h3><div style="font-size: 18px">{{ current_user.apikey }}</div>
+        </div>
+    {% else %}
+        <div style="display: flex; flex-direction: column; align-items: center">
+            <p>Ваш почта не подтверждена, из-за этого вы не можете использовать API.</p>
+            <p>На вашу почту было отправленно письмо, с инструкцией для её подтверждения</p>
+        </div>
+    {% endif %}
 {% endblock %}

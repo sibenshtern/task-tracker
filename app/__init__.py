@@ -8,11 +8,10 @@ database.global_init('app/db.sqlite')
 
 from .database import models
 
-from .app import blueprint as app_blueprint
 from .about import blueprint as about_blueprint
 from .other import blueprint as other_blueprint
 from .api.task_resources import TaskResource, TaskListResource
-from .api.mark_resources import MarkResource, MarkListResource
+from .api.mark_resources import LabelResource, LabelListResource
 
 from . import config
 
@@ -22,20 +21,21 @@ app.config.from_object(config.DebugConfig)
 mail = Mail()
 mail.init_app(app)
 
-from .auth import blueprint as auth_blueprint
-
 login_manager = LoginManager()
 login_manager.init_app(app) # noqa
+
+from .auth import blueprint as auth_blueprint
+from .main_app import blueprint as app_blueprint
 
 api = Api(app) # noqa
 api.add_resource(TaskResource, '/api/<string:apikey>/task/<int:task_id>')
 api.add_resource(TaskListResource, '/api/<string:apikey>/tasks')
 
-api.add_resource(MarkResource, '/api/<string:apikey>/mark/<int:label_id>')
-api.add_resource(MarkListResource, '/api/<string:apikey>/marks')
+api.add_resource(LabelResource, '/api/<string:apikey>/mark/<int:label_id>')
+api.add_resource(LabelListResource, '/api/<string:apikey>/marks')
 
 
-app.register_blueprint(app_blueprint, url_prefix="/app")
+app.register_blueprint(app_blueprint, url_prefix="/main_app")
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(about_blueprint, url_prefix='/about')
 app.register_blueprint(other_blueprint)

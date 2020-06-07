@@ -3,19 +3,19 @@ from datetime import datetime
 from flask import jsonify
 
 from flask_restful import Resource
-from flask_restful import abort, reqparse
+from flask_restful import reqparse
 
 from marshmallow import ValidationError
 
 from . import utils as api_utils
-from app.database.utils import users_utils, tasks_utils, labels_utils
+from app.database.utils import tasks_utils, labels_utils
 
 from .schema import TaskSchema
 
 parser = reqparse.RequestParser()
-parser.add_argument('title', type=str, required=True)
-parser.add_argument('mark_ids', type=str, required=True)
-parser.add_argument('finish_date', type=str, required=True)
+parser.add_argument('title', type=str)
+parser.add_argument('labels_ids', type=str)
+parser.add_argument('finish_date', type=str)
 
 # Аргумент, специально для PUT запроса
 parser.add_argument(
@@ -25,27 +25,31 @@ TASK_ARGS = (
     "id", "user_id", "title", "is_finished", "labels", "modified_date",
     "finish_date"
 )
+TASK_TYPE = 'task'
 
 
 class TaskResource(Resource):
 
     def get(self, apikey, task_id):
-
-        api_utils.check_apikey(apikey)
-        user = users_utils.get_user(apikey=apikey)
+        user = api_utils.check_and_return_user_by_apikey(apikey)
 
         self.check_task_id(user, task_id)
 
         task = tasks_utils.get_task(user.id, task_id)
-        return jsonify({
-            "task": task.to_dict(only=TASK_ARGS)
-        })
+        return jsonify(
+            {
+                'error': False,
+                'status_code': 200,
+                'object': {
+                    'type': TASK_TYPE,
+                    'content': task.to_dict(only=TASK_ARGS)
+                }
+            }
+        )
 
     def put(self, apikey, task_id):
         args = parser.parse_args()
-
-        api_utils.check_apikey(apikey)
-        user = users_utils.get_user(apikey=apikey)
+        user = api_utils.check_and_return_user_by_apikey(apikey)
 
         self.check_task_id(user, task_id)
 
@@ -54,22 +58,37 @@ class TaskResource(Resource):
                 task = tasks_utils.get_task(user.id, task_id)
                 task.change_status()
                 tasks_utils.session.commit()
-                return jsonify({'status': 'OK', 'message': 'status changed'})
+                return jsonify(
+                    {
+                        'error': False,
+                        'status_code': 200,
+                        'object': task.to_dict(only=TASK_ARGS),
+                        'status': 'updated'
+                    }
+                )
         else:
-            return abort(404, message="Action is required")
+            return {
+                'error': True,
+                'status_code': 404,
+                'error_messages': ['Action is required']
+            }
 
     def delete(self, apikey, task_id):
-        api_utils.check_apikey(apikey)
-        user = users_utils.return_user(apikey=apikey)
-
+        user = api_utils.check_and_return_user_by_apikey(apikey)
         self.check_task_id(user, task_id)
 
+        task = tasks_utils.get_task(user.id, task_id)
         tasks_utils.delete_task(user.id, task_id)
 
         return jsonify(
             {
-                'status': 'OK', 'message':
-                f'Successful delete task with ID: {task_id}'
+                'error': False,
+                'status_code': 200,
+                'object': {
+                    'type': TASK_TYPE,
+                    'content': task.to_dict(only=TASK_ARGS)
+                },
+                'status': 'deleted'
             }
         )
 
@@ -85,51 +104,95 @@ class TaskResource(Resource):
 class TaskListResource(Resource):
 
     def get(self, apikey):
-        self.check_apikey(apikey)
+        user = api_utils.check_and_return_user_by_apikey(apikey)
 
-        user = users_utils.return_user(apikey=apikey)
-        return jsonify([task.json() for task in user.tasks])
+        return jsonify(
+            {
+                'error': False,
+                'objects': [
+                    task.to_dict(only=TASK_ARGS)
+                    for task in tasks_utils.get_tasks(user.id)
+                ]
+            }
+        )
 
     def post(self, apikey):
         args = parser.parse_args()
+        user = api_utils.check_and_return_user_by_apikey(apikey)
 
-        api_utils.check_apikey(apikey)
-        user = users_utils.return_user(apikey=apikey)
+        labels_ids_argument = False
+        finish_date_argument = False
 
-        try:
-            finish_date = datetime.strptime(args.finish_date, "%d.%m.%Y")
-        except ValueError:
-            abort(404, message='Invalid finish date format')
+        if args.get("title") is None:
+            return {
+                'error': True,
+                'status_code': 404,
+                'error_messages': ['Title is required']
+            }, 404
+        if args.get('labels_ids') is not None:
+            labels_ids_argument = True
+        if args.get('finish_date') is not None:
+            finish_date_argument = True
+
+        if finish_date_argument:
+            try:
+                finish_date = datetime.strptime(args.finish_date, "%d.%m.%Y")
+            except ValueError:
+                return {
+                    'error': True,
+                    'status_code': 404,
+                    'error_messages': ['Invalid date format']
+                }
 
         task_scheme = TaskSchema()
 
+        # Проверяю, что переданные в запросе параметры правильные
+        payloads = {'title': args.title}  # словарь для проверки
+
+        # Проверяю, что пользователь передал аргументы, чтобы не
+        # вызвать ошибку
+
+        if labels_ids_argument:
+            payloads['labels'] = args.labels_ids
+        if finish_date_argument:
+            payloads['finish_date'] = finish_date.strftime('%d.%m.%Y')  # noqa
+
         try:
-            result = task_scheme.load(
-                {
-                    'title': args.title,
-                    'marks': args.mark_ids,
-                    'finish_date': finish_date.strftime('%d.%m.%Y')  # noqa
-                }
-            )
+            result = task_scheme.load(payloads)
         except ValidationError as error:
-            abort(404, message=error.messages)
+            return {
+                'error': True,
+                'status_code': 404,
+                'error_messages': error.messages
+            }, 404
 
-        labels_ids = list(map(int, result['marks'].split(';')))  # noqa
+        if labels_ids_argument:
+            labels_ids = list(map(int, result['labels'].split(';')))  # noqa
 
-        marks_objects = [
-            labels_utils.return_label(user.id, label_id)
-            for label_id in labels_ids
-            if labels_utils.return_label(user.id, label_id) is not None
-        ]
+            labels_objects = [
+                labels_utils.get_label(user.id, label_id=label_id)
+                for label_id in labels_ids
+                if labels_utils.get_label(
+                    user.id, label_id=label_id
+                ) is not None
+            ]
 
-        tasks_utils.create_task(
-            user, result['title'], marks_objects, finish_date
-        )
-        return jsonify({'result': 'Create Task'})
-
-    @staticmethod
-    def check_apikey(apikey: str):
-        user_obj = {
-            'obj': 'user', 'apikey': apikey, 'message': 'Invalid apikey.'
+        task_arguments = {
+            'title': result['title'],
+            'labels': []
         }
-        return api_utils.abort_if_obj_doesnt_exist(user_obj) is None
+
+        if labels_ids_argument:
+            task_arguments['labels'] = labels_objects  # noqa
+        if finish_date_argument:
+            task_arguments['finish_date'] = finish_date
+
+        task = tasks_utils.create_task(user.id, **task_arguments)
+        return jsonify(
+            {
+                'error': False,
+                'status_code': 200,
+                'object': task.to_dict(only=TASK_ARGS),
+                'status': 'created'
+            }
+        )

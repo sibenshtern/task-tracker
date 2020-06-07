@@ -8,9 +8,10 @@ from werkzeug.utils import redirect
 
 from app.database.utils import session, tasks_utils, labels_utils
 from .forms import AddMarkForm, AddTaskForm, EditMarkForm, EditTaskForm
+from app.email import send_verification_email
 
 
-blueprint = Blueprint('app', __name__, template_folder='templates')
+blueprint = Blueprint('main_app', __name__, template_folder='templates')
 
 
 @blueprint.route('/')
@@ -22,7 +23,9 @@ def index_page():
 @blueprint.route('/apikey')
 @login_required
 def apikey_page():
-    return render_template('app/apikey.html', apikey=current_user.apikey)
+    if not current_user.is_verified:
+        send_verification_email(current_user)
+    return render_template('app/apikey.html')
 
 
 @blueprint.route('/all')
@@ -61,7 +64,7 @@ def add_mark_page():
         if labels_utils.get_label(
                 current_user.id, title=form.title.data) is None:
             labels_utils.create_label(current_user, form.title.data)
-        return redirect('/app')
+        return redirect('/main_app')
 
     return render_template('app/add_mark.html', form=form)
 
@@ -82,16 +85,10 @@ def add_task_page():
             labels.append(
                 labels_utils.get_label(current_user.id, label_id=int(choice)))
 
-        finish_date = datetime.date(
-            form.finish_date.data.year,
-            form.finish_date.data.month,
-            form.finish_date.data.day
-        )
-
         tasks_utils.create_task(
-            current_user.id, form.title.date, labels, finish_date
+            current_user.id, form.title.data, labels, form.finish_date.data
         )
-        return redirect('/app')
+        return redirect('/main_app')
 
     return render_template('app/add_task.html', form=form)
 
@@ -113,7 +110,7 @@ def edit_mark_page(label_id):
             session.delete(label)
 
         session.commit()
-        return redirect('/app/all')
+        return redirect('/main_app/all')
 
     form.title.process_data(label.title)
     return render_template('app/edit_mark.html', form=form)
@@ -149,7 +146,7 @@ def edit_task_page(task_id):
             session.delete(task)
 
         session.commit()
-        return redirect('/app')
+        return redirect('/main_app')
 
     form.title.process_data(task.title)
     form.finish_date.process_data(task.finish_date)

@@ -10,22 +10,18 @@ FINISH_DATE_FORMAT = "%d.%m.%Y"
 
 class TaskSchema(Schema):
     title = Str(validate=Length(min=1, max=256), required=True)
-    marks = Str()
-    finish_date = Date(format=FINISH_DATE_FORMAT, required=True)
+    labels = Str()
+    finish_date = Date(format=FINISH_DATE_FORMAT)
 
-    @validates('marks')
-    def marks_validator(self, marks):
-        marks_list = marks.split(';')
+    @validates('labels')
+    def marks_validator(self, labels):
+        labels_list = labels.split(';')
 
-        for mark_id in marks_list:
-            if not mark_id.isdigit():
-                raise ValidationError('Mark ID must be integer')
+        for label_id in labels_list:
+            if not label_id.isdigit():
+                raise ValidationError('Label ID must be integer')
 
     @validates('finish_date')
     def validate_finish_date(self, value: date):
         if value < date.today():
             raise ValidationError("Finish date can't be in past")
-
-
-class MarkSchema(Schema):
-    title = Str(validate=Length(min=1, max=16), required=True)

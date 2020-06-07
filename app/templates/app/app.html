@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block own_styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename="css/my_styles/style.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/task-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_styles/sidebar-style.css') }}">
 {% endblock %}
@@ -18,7 +18,13 @@
 
 {% block content %}
     <div id="wrapper">
+
         <nav id="sidebar" class="mCustomScrollbar _mCS_1 mCS-autoHide">
+            <div id="dismiss">
+                <div style="padding: 5px 10px 5px 10px; margin: 20px 10px 0 0; background-color: white;">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+            </div>
             <ul class="list-unstyled components">
                 <li class="sidebar-component" id="all">
                     <span class="item_icon" style="color: #00214d;">
@@ -29,8 +35,10 @@
                             </g>
                         </svg>
                     </span>
-                    <a href="/app/all">Все задачи</a>
+                    <a href="/main_app/all">Все задачи</a>
+
                 </li>
+
                 <li class="sidebar-component" id="today">
                     <span class="item_icon" style="color: #ff5470;">
                         <svg width="24" height="24" viewBox="0 0 24 24">
@@ -43,11 +51,11 @@
                             </g>
                         </svg>
                     </span>
-                    <a href="/app/today">&nbsp;Сегодня</a>
+                    <a href="/main_app/today">&nbsp;Сегодня</a>
                 </li>
                 <li class="sidebar-dropdown" id="marks">
                     <div class="dropdown-controls">Метки
-                        <a href="/app/add_mark" class="add-link" style="margin-bottom: 1px">
+                        <a href="/main_app/add_mark" class="add-link" style="margin-bottom: 1px">
                             <span></span>
                             <span></span>
                         </a>
@@ -79,6 +87,7 @@
         function change_menu()
         {
             activate_element('#sidebar');
+            activate_element('.overlay');
             activate_element(this);
         }
 
@@ -90,7 +99,7 @@
 
         function edit_mark(event)
         {
-            window.location.pathname = `/app/edit_mark/${event.target.id}`;
+            window.location.pathname = `/main_app/edit_mark/${event.target.id}`;
         }
 
         function finish_task(task_id)
@@ -104,14 +113,19 @@
 
         function show_tasks(mark_id)
         {
-            window.location.pathname = `/app/show_tasks/${mark_id}`;
+            window.location.pathname = `/main_app/show_tasks/${mark_id}`;
         }
 
         $(document).ready(function ()
         {
             $('#sidebarCollapse').on('click', change_menu);
             $('.sidebar-dropdown').on('click', dropdown);
-            $('.mark-title').on('click', edit_mark)
+            $('.mark-title').on('click', edit_mark);
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+                $('#sidebarCollapse').removeClass('active');
+             });
         });
 
         let path = window.location.toString().split('/').pop();
