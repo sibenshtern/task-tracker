@@ -63,7 +63,7 @@ def add_mark_page():
     if form.validate_on_submit():
         if labels_utils.get_label(
                 current_user.id, title=form.title.data) is None:
-            labels_utils.create_label(current_user, form.title.data)
+            labels_utils.create_label(current_user.id, form.title.data)
         return redirect('/main_app')
 
     return render_template('app/add_mark.html', form=form)
@@ -83,7 +83,8 @@ def add_task_page():
 
         for choice in form.marks.data:
             labels.append(
-                labels_utils.get_label(current_user.id, label_id=int(choice)))
+                labels_utils.get_label(current_user.id, label_id=int(choice))
+            )
 
         tasks_utils.create_task(
             current_user.id, form.title.data, labels, form.finish_date.data

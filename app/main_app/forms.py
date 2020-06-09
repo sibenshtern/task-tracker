@@ -15,7 +15,7 @@ class AddMarkForm(FlaskForm):
 class AddTaskForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
     marks = SelectMultipleField()
-    finish_date = DateField(default=datetime.date.today(), validators=[DataRequired()])
+    finish_date = DateField(default=datetime.date.today())
     submit = SubmitField('Добавить задачу')
 
 
@@ -28,6 +28,6 @@ class EditMarkForm(FlaskForm):
 class EditTaskForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
     labels = SelectMultipleField()
-    finish_date = DateField()
+    finish_date = DateField(default=datetime.date.today())
     edit_button = SubmitField('Изменить задачу')
     delete_button = SubmitField('Удалить задачу')

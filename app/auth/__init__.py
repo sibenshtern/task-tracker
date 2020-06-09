@@ -63,7 +63,10 @@ def signup_page():
         user = users_utils.create_user(
             form.email.data, form.name.data, form.password.data
         )
-        email.send_verification_email(user)
+        try:
+            email.send_verification_email(user)
+        except Exception as error:
+            print(error)
 
         return redirect('/login')
 

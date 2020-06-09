@@ -16,7 +16,7 @@ from .api.mark_resources import LabelResource, LabelListResource
 from . import config
 
 app = Flask(__name__)
-app.config.from_object(config.DebugConfig)
+app.config.from_object(config.ProductionConfig)
 
 mail = Mail()
 mail.init_app(app)
