@@ -13,13 +13,14 @@ from app.database.utils import tasks_utils, labels_utils
 from .schema import TaskSchema
 
 parser = reqparse.RequestParser()
-parser.add_argument('title', type=str)
-parser.add_argument('labels_ids', type=str)
-parser.add_argument('finish_date', type=str)
+parser.add_argument('title', type=str, location='args')
+parser.add_argument('labels_ids', type=str, location='args')
+parser.add_argument('finish_date', type=str, location='args')
 
 # Аргумент, специально для PUT запроса
 parser.add_argument(
-    'action', choices=('change_status', ), help="Bas choice: {error_msg}."
+    'action', choices=('change_status',), help="Bas choice: {error_msg}.",
+    location='args'
 )
 TASK_ARGS = (
     "id", "user_id", "title", "is_finished", "labels", "modified_date",
@@ -36,8 +37,7 @@ class TaskResource(Resource):
         self.check_task_id(user, task_id)
 
         task = tasks_utils.get_task(user.id, task_id)
-        return jsonify(
-            {
+        return {
                 'error': False,
                 'status_code': 200,
                 'object': {
@@ -45,27 +45,24 @@ class TaskResource(Resource):
                     'content': task.to_dict(only=TASK_ARGS)
                 }
             }
-        )
 
     def put(self, apikey, task_id):
         args = parser.parse_args()
-        user = api_utils.check_and_return_user_by_apikey(apikey)
 
+        user = api_utils.check_and_return_user_by_apikey(apikey)
         self.check_task_id(user, task_id)
 
-        if args.action:
-            if args.action.startswith('change_status'):
+        if args['action']:
+            if args['action'].startswith('change_status'):
                 task = tasks_utils.get_task(user.id, task_id)
                 task.change_status()
                 tasks_utils.session.commit()
-                return jsonify(
-                    {
+                return {
                         'error': False,
                         'status_code': 200,
                         'object': task.to_dict(only=TASK_ARGS),
                         'status': 'updated'
                     }
-                )
         else:
             return {
                 'error': True,
@@ -80,8 +77,7 @@ class TaskResource(Resource):
         task = tasks_utils.get_task(user.id, task_id)
         tasks_utils.delete_task(user.id, task_id)
 
-        return jsonify(
-            {
+        return {
                 'error': False,
                 'status_code': 200,
                 'object': {
@@ -90,7 +86,6 @@ class TaskResource(Resource):
                 },
                 'status': 'deleted'
             }
-        )
 
     @staticmethod
     def check_task_id(user, task_id):

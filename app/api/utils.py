@@ -32,8 +32,8 @@ def check_and_return_user_by_apikey(apikey):
     abort_if_obj_doesnt_exist(user_obj)
     user = users_utils.get_user(apikey=apikey)
 
-    if not user.is_verified:
-        abort(404, message="User isn't verified")
+    # if not user.is_verified:
+    #     abort(404, message="User isn't verified")
 
     return user
 
