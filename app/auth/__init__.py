@@ -1,13 +1,13 @@
 from flask import Blueprint
-from flask import render_template, flash, request
+from flask import render_template, request
 
 from flask_login import login_user, logout_user, current_user
 
 from werkzeug.utils import redirect
 
-from . import forms
+from app.auth import forms
 from app.database.utils import users_utils, session
-from app import email
+from app import email_sending
 
 
 blueprint = Blueprint('auth', __name__, template_folder='templates')
@@ -64,7 +64,7 @@ def signup_page():
             form.email.data, form.name.data, form.password.data
         )
         try:
-            email.send_verification_email(user)
+            email_sending.send_verification_email(user)
         except Exception as error:
             print(error)
 
@@ -91,7 +91,7 @@ def verify_user():
         if form.validate_on_submit():
             user = users_utils.get_user(email=form.email.data)
             if user is not None:
-                email.send_verification_email(user)
+                email_sending.send_verification_email(user)
 
             if current_user.is_authenticated:
                 return redirect('/main_app')
@@ -131,7 +131,7 @@ def reset_password():
         if form.validate_on_submit():
             user = users_utils.get_user(email=form.email.data)
             if user is not None:
-                email.send_reset_password_email(user)
+                email_sending.send_reset_password_email(user)
 
             return redirect('/login')
 

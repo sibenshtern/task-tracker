@@ -8,7 +8,7 @@ from werkzeug.utils import redirect
 
 from app.database.utils import session, tasks_utils, labels_utils
 from .forms import AddMarkForm, AddTaskForm, EditMarkForm, EditTaskForm
-from app.email import send_verification_email
+from app.email_sending import send_verification_email
 
 
 blueprint = Blueprint('main_app', __name__, template_folder='templates')

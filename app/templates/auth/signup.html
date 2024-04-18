@@ -21,7 +21,7 @@
                     {% endfor %}
                 </div>
                 <div class="form-group">
-                    {{ form.email(class="form-control", type="email", placeholder="Электронная почта") }}
+                    {{ form.email(class="form-control", type="email_sending", placeholder="Электронная почта") }}
                     {% for error in form.email.errors %}
                         <div style="color: #e3442f; font-family: 'JetBrains Mono', monospace; font-size: .75rem">{{ error }}</div>
                     {% endfor %}

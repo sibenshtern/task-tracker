@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 
 from wtforms import StringField, SubmitField, SelectMultipleField
 from wtforms.validators import DataRequired, Length
-from wtforms.fields.html5 import DateField
+from wtforms.fields import DateField
 
 
 class AddMarkForm(FlaskForm):

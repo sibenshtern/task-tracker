@@ -3,17 +3,17 @@ from flask_login import LoginManager
 from flask_restful import Api
 from flask_mail import Mail
 
-from . import database
+from app import database
 database.global_init('app/db.sqlite')
 
-from .database import models
+from app.database import models
 
-from .about import blueprint as about_blueprint
-from .other import blueprint as other_blueprint
-from .api.task_resources import TaskResource, TaskListResource
-from .api.mark_resources import LabelResource, LabelListResource
+from app.about import blueprint as about_blueprint
+from app.other import blueprint as other_blueprint
+from app.api.task_resources import TaskResource, TaskListResource
+from app.api.mark_resources import LabelResource, LabelListResource
 
-from . import config
+from app import config
 
 app = Flask(__name__)
 app.config.from_object(config.ProductionConfig)
@@ -24,8 +24,8 @@ mail.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app) # noqa
 
-from .auth import blueprint as auth_blueprint
-from .main_app import blueprint as app_blueprint
+from app.auth import blueprint as auth_blueprint
+from app.main_app import blueprint as app_blueprint
 
 api = Api(app) # noqa
 api.add_resource(TaskResource, '/api/<string:apikey>/task/<int:task_id>')

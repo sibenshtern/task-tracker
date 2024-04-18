@@ -52,7 +52,7 @@ class Task(SqlAlchemyBase, SerializerMixin):
     title = sqlalchemy.Column(String, default="Untitled", nullable=True)
     is_finished = sqlalchemy.Column(Boolean, default=False)
     
-    labels = orm.relation(
+    labels = orm.relationship(
         'Label', secondary="tasks_to_labels", backref="tasks"
     )
 

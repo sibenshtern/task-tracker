@@ -25,9 +25,9 @@ class UserUtils:
     def get_user(self, **kwargs) -> Optional[models.User]:
         if kwargs.get('user_id') is not None:
             return self.session.query(models.User).get(kwargs.get('user_id'))
-        elif kwargs.get('email') is not None:
+        elif kwargs.get('email_sending') is not None:
             return self.session.query(models.User).filter(
-                models.User.email == kwargs.get('email')
+                models.User.email == kwargs.get('email_sending')
             ).first()
         elif kwargs.get('apikey') is not None:
             return self.session.query(models.User).filter(
