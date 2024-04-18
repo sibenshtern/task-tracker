@@ -35,7 +35,7 @@
                             </g>
                         </svg>
                     </span>
-                    <a href="/main_app/all">Все задачи</a>
+                    <a href="/app/all">Все задачи</a>
 
                 </li>
 
@@ -51,11 +51,11 @@
                             </g>
                         </svg>
                     </span>
-                    <a href="/main_app/today">&nbsp;Сегодня</a>
+                    <a href="/app/today">&nbsp;Сегодня</a>
                 </li>
                 <li class="sidebar-dropdown" id="marks">
                     <div class="dropdown-controls">Метки
-                        <a href="/main_app/add_mark" class="add-link" style="margin-bottom: 1px">
+                        <a href="/app/add_mark" class="add-link" style="margin-bottom: 1px">
                             <span></span>
                             <span></span>
                         </a>
@@ -99,7 +99,7 @@
 
         function edit_mark(event)
         {
-            window.location.pathname = `/main_app/edit_mark/${event.target.id}`;
+            window.location.pathname = `/app/edit_mark/${event.target.id}`;
         }
 
         function finish_task(task_id)
@@ -113,7 +113,7 @@
 
         function show_tasks(mark_id)
         {
-            window.location.pathname = `/main_app/show_tasks/${mark_id}`;
+            window.location.pathname = `/app/show_tasks/${mark_id}`;
         }
 
         $(document).ready(function ()

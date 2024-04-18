@@ -7,4 +7,4 @@ blueprint = Blueprint('other', __name__, template_folder='templates')
 
 @blueprint.route('/')
 def index_page():
-    return render_template('index.html', title="NegotiumTracker")
+    return render_template('index.html', title="Task Tracker")

@@ -22,7 +22,7 @@ def logout():
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login_page():
     if current_user.is_authenticated:
-        return redirect('/main_app')
+        return redirect('/app')
 
     form = forms.LoginForm()
 
@@ -31,7 +31,7 @@ def login_page():
         if user is not None:
             if user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
-                return redirect('/main_app/all')
+                return redirect('/app/all')
 
         return render_template(
             'auth/login.html', form=form,
@@ -44,7 +44,7 @@ def login_page():
 @blueprint.route('/signup', methods=['GET', 'POST'])
 def signup_page():
     if current_user.is_authenticated:
-        return redirect('/main_app')
+        return redirect('/app')
 
     form = forms.SignupForm()
 
@@ -84,7 +84,7 @@ def verify_user():
 
         user.verify()
         session.commit()
-        return redirect('/main_app/apikey')
+        return redirect('/app/apikey')
     else:
         form = forms.MailRequestForm()
 
@@ -94,7 +94,7 @@ def verify_user():
                 email_sending.send_verification_email(user)
 
             if current_user.is_authenticated:
-                return redirect('/main_app')
+                return redirect('/app')
 
             return redirect('/login')
 
@@ -107,7 +107,7 @@ def verify_user():
 @blueprint.route('/reset_password', methods=["GET", "POST"])
 def reset_password():
     if current_user.is_authenticated:
-        return redirect('/main_app')
+        return redirect('/app')
 
     token = request.args.get("token")
     if token is not None:

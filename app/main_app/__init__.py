@@ -11,7 +11,7 @@ from .forms import AddMarkForm, AddTaskForm, EditMarkForm, EditTaskForm
 from app.email_sending import send_verification_email
 
 
-blueprint = Blueprint('main_app', __name__, template_folder='templates')
+blueprint = Blueprint('app', __name__, template_folder='templates')
 
 
 @blueprint.route('/')
@@ -64,7 +64,7 @@ def add_mark_page():
         if labels_utils.get_label(
                 current_user.id, title=form.title.data) is None:
             labels_utils.create_label(current_user.id, form.title.data)
-        return redirect('/main_app')
+        return redirect('/app')
 
     return render_template('app/add_mark.html', form=form)
 
@@ -89,7 +89,7 @@ def add_task_page():
         tasks_utils.create_task(
             current_user.id, form.title.data, labels, form.finish_date.data
         )
-        return redirect('/main_app')
+        return redirect('/app')
 
     return render_template('app/add_task.html', form=form)
 
@@ -111,7 +111,7 @@ def edit_mark_page(label_id):
             session.delete(label)
 
         session.commit()
-        return redirect('/main_app/all')
+        return redirect('/app/all')
 
     form.title.process_data(label.title)
     return render_template('app/edit_mark.html', form=form)
@@ -147,7 +147,7 @@ def edit_task_page(task_id):
             session.delete(task)
 
         session.commit()
-        return redirect('/main_app')
+        return redirect('/app')
 
     form.title.process_data(task.title)
     form.finish_date.process_data(task.finish_date)
